@@ -97,5 +97,6 @@ add_subdirectory(repo/xo-kalmanfilter)
 add_subdirectory(repo/xo-pykalmanfilter)
 add_subdirectory(repo/xo-distribution)
 add_subdirectory(repo/xo-pydistribution)
+add_subdirectory(repo/xo-optionutil)
 
 # ----------------------------------------------------------------
