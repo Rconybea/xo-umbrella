@@ -72,7 +72,7 @@ message("-- CMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}")
 # xo satellite projects
 
 add_subdirectory(repo/xo-cmake)
-#add_subdirectory(repo/indentlog)
+add_subdirectory(repo/xo-indentlog)
 #add_subdirectory(repo/subsys)
 #add_subdirectory(repo/refcnt)
 #add_subdirectory(repo/reflect)
