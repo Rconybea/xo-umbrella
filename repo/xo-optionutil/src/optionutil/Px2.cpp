@@ -7,19 +7,19 @@
 #include "xo/reflect/StructReflector.hpp"
 
 namespace xo {
-  using xo::reflect::StructReflector;
+    using xo::reflect::StructReflector;
 
-  namespace option {
-    void
-    Px2::reflect_self()
-    {
-      StructReflector<Px2> sr;
+    namespace option {
+        void
+        Px2::reflect_self()
+        {
+            StructReflector<Px2> sr;
 
-      if (sr.is_incomplete()) {
-    REFLECT_MEMBER(sr, px_v);
-      }
-    } /*reflect_self*/
-  } /*namespace option*/
+            if (sr.is_incomplete()) {
+                REFLECT_MEMBER(sr, px_v);
+            }
+        } /*reflect_self*/
+    } /*namespace option*/
 } /*namespace xo*/
 
 /* end Px2.cpp */
