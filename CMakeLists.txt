@@ -36,7 +36,7 @@ xo_toplevel_compile_options()
 # ----------------------------------------------------------------
 
 add_subdirectory(src/observable)
-#add_subdirectory(utest)
+add_subdirectory(utest)
 add_subdirectory(docs)
 
 # ----------------------------------------------------------------
