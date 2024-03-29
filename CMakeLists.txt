@@ -70,7 +70,7 @@ message("-- CMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}")
 
 # ----------------------------------------------------------------
 # xo satellite projects
-
+#
 add_subdirectory(repo/xo-cmake)
 add_subdirectory(repo/xo-indentlog)
 add_subdirectory(repo/xo-subsys)
@@ -101,3 +101,6 @@ add_subdirectory(repo/xo-optionutil)
 add_subdirectory(repo/xo-observable)
 
 # ----------------------------------------------------------------
+# documentation (must come after satellites)
+#
+add_subdirectory(docs)
