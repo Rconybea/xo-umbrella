@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "dimension.hpp"
+#include "unit.hpp"
 #include <concepts>
 
 namespace xo {
