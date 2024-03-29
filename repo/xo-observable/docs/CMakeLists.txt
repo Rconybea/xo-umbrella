@@ -21,19 +21,25 @@ set(ALL_LIBRARY_TARGETS xo_observable)  # todo: automate this from xo-cmake macr
 find_program(DOXYGEN_EXECUTABLE NAMES doxygen REQUIRED)
 message("-- DOXYGEN_EXECUTABLE=${DOXYGEN_EXECUTABLE}")
 
-configure_file(
-    Doxyfile.in ${DOX_CONFIG_FILE}
-    FILE_PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-    @ONLY)
+if (XO_SUBMODULE_BUILD)
+else()
+    # build docs starting from xo-observable only in standalone build.
+    # otherwise use top-level doxygen setup instead.
 
-file(MAKE_DIRECTORY ${DOX_OUTPUT_DIR})
-add_custom_command(
-    OUTPUT ${DOX_INDEX_FILE}
-    DEPENDS ${DOX_DEPS} ${ALL_LIBRARY_TARGETS} ${ALL_UTEST_TARGETS}
-    COMMAND "${DOXYGEN_EXECUTABLE}" ${DOX_CONFIG_FILE}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    MAIN_DEPENDENCY ${DOX_CONFIG_FILE}
-    COMMENT "Generating docs (doxygen)")
+    configure_file(
+        Doxyfile.in ${DOX_CONFIG_FILE}
+        FILE_PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+        @ONLY)
+
+    file(MAKE_DIRECTORY ${DOX_OUTPUT_DIR})
+    add_custom_command(
+        OUTPUT ${DOX_INDEX_FILE}
+        DEPENDS ${DOX_DEPS} ${ALL_LIBRARY_TARGETS} ${ALL_UTEST_TARGETS}
+        COMMAND "${DOXYGEN_EXECUTABLE}" ${DOX_CONFIG_FILE}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        MAIN_DEPENDENCY ${DOX_CONFIG_FILE}
+        COMMENT "Generating docs (doxygen)")
+endif()
 
 # To build this target
 #   $ cmake --build .build -j -- doxygen
@@ -42,6 +48,6 @@ add_custom_command(
 #   $ make doxygen
 #
 add_custom_target(
-    doxygen
+    xo_observable_dox
     DEPENDS ${DOX_INDEX_FILE}
 )
