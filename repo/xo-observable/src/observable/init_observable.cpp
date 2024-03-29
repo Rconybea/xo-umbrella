@@ -1,6 +1,8 @@
 /* @file init_observable.cpp */
 
 #include "init_observable.hpp"
+#include "dimension.hpp"
+#include "ExplicitOrderedSet.hpp"
 #include "xo/reflect/init_reflect.hpp"
 //#include "xo/printjson/PrintJson.hpp"
 
