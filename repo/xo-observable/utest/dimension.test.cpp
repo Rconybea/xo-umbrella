@@ -1,6 +1,6 @@
 /* @file dimension.test.cpp */
 
-#include "xo/observable/dimension.hpp"
+#include "xo/observable/unit.hpp"
 #include "xo/reflect/Reflect.hpp"
 #include "xo/cxxutil/demangle.hpp"
 #include "xo/indentlog/scope.hpp"
