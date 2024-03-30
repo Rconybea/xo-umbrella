@@ -67,16 +67,18 @@ namespace xo {
             static constexpr auto value = native_unit_abbrev_v<DimId>;
         };
 
-        template <native_dim_id DimId, typename InnerScale>
-        struct scaled_native_unit_abbrev {
-            /* e.g. unit of '10 grams' will have abbrev '10g' in absence
-             *      of a specialization for scaled_native_unit_abbrev
-             */
-            static constexpr auto value = stringliteral_concat(stringliteral_from_ratio<InnerScale>().value_, "g");
-        };
 
         template <native_dim_id DimId, typename InnerScale>
         constexpr auto  scaled_native_unit_abbrev_v = scaled_native_unit_abbrev<DimId, InnerScale>::value;
+            template <native_dim_id DimId, typename InnerScale>
+            struct scaled_native_unit_abbrev {
+                /* e.g. unit of '10000 grams' will have abbrev '1000g' in absence
+                 *      of a specialization for scaled_native_unit_abbrev
+                 */
+                static constexpr auto value = stringliteral_concat(stringliteral_from_ratio<InnerScale>().value_,
+                                                                   native_unit_abbrev_helper<DimId>::value.value_);
+            };
+
 
         // ----- native_bpu -----
 
