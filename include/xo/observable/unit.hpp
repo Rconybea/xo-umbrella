@@ -24,6 +24,18 @@ namespace xo {
             static_assert(bpu_list_concept<canon_type>);
         };
 
+        // ----- normalize_unit -----
+
+        template <typename Unit>
+        struct normalize_unit {
+            static_assert(unit_concept<Unit>);
+
+            using type = wrap_unit<std::ratio<1>, typename Unit::dim_type>;
+        };
+
+        template <typename Unit>
+        using normalize_unit_t = normalize_unit<Unit>::type;
+
         // ----- unit_abbrev_v -----
 
         /** @brief canonical stringliteral abbreviation for dimension D. **/
