@@ -127,6 +127,25 @@ namespace xo {
         template <typename U1, typename U2>
         constexpr bool same_unit_v = same_unit<U1, U2>::value;
 
+        // ----- unit_conversion_factor -----
+
+        template <typename U1, typename U2>
+        struct unit_conversion_factor {
+            static_assert(same_dimension_v<U1, U2>);
+
+            using _unit_ratio_type = typename unit_cartesian_product<U1, unit_invert_t<U2>>::type;
+            using type = _unit_ratio_type::scalefactor_type;
+        };
+
+        /** conversion factor from U1 to U2:
+         *    U1 = x.U2
+         *  with:
+         *    x = R::num / R::den
+         *    R = unit_conversion_factor_t<U1,U2>
+         **/
+        template <typename U1, typename U2>
+        using unit_conversion_factor_t = unit_conversion_factor<U1, U2>::type;
+
         // ----- units -----
 
         namespace units {
