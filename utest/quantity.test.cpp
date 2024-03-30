@@ -9,11 +9,20 @@
 
 namespace xo {
     using xo::obs::quantity;
-#ifdef OBSOLETE
-    using xo::obs::qty::time;
-#endif
+
+    using xo::obs::qty::milliseconds;
     using xo::obs::qty::seconds;
     using xo::obs::qty::minutes;
+
+    using xo::obs::unit_conversion_factor_t;
+    using xo::obs::unit_cartesian_product_t;
+    using xo::obs::unit_invert_t;
+    using xo::obs::unit_abbrev_v;
+    using xo::obs::same_dimension_v;
+    using xo::obs::from_ratio;
+    using xo::obs::stringliteral_from_ratio;
+    using xo::obs::ratio2str_aux;
+    using xo::obs::cstr_from_ratio;
     namespace units = xo::obs::units;
 
     namespace ut {
@@ -90,6 +99,85 @@ namespace xo {
 
             REQUIRE(sum.scale() == 121);
         } /*TEST_CASE(add3)*/
+
+        TEST_CASE("add4", "[quantity]") {
+            constexpr bool c_debug_flag = true;
+
+            scope log(XO_DEBUG2(c_debug_flag, "TEST_CASE.add4"));
+
+            using u_kgps = unit_cartesian_product_t<units::kilogram, unit_invert_t<units::second>>;
+            using u_gpm = unit_cartesian_product_t<units::gram, unit_invert_t<units::minute>>;
+
+            log && log(xtag("u_kgps", unit_abbrev_v<u_kgps>.c_str()));
+            log && log(xtag("u_gpm", unit_abbrev_v<u_gpm>.c_str()));
+
+            static_assert(same_dimension_v<u_kgps, u_gpm>);
+
+            using convert_type = unit_conversion_factor_t<u_kgps, u_gpm>;
+
+            log && log(xtag("u_kgps->u_gpm", cstr_from_ratio<convert_type>()));
+
+            CHECK(strcmp(cstr_from_ratio<convert_type>(), "60000") == 0);
+            CHECK(from_ratio<int64_t, convert_type>() == 60000);
+
+            auto q1 = quantity<u_kgps, double>::promote(0.1);
+            auto q2 = quantity<u_gpm, double>();
+
+            q2 = q1;
+
+            log && log(xtag("q1", q1), xtag("q2", q2));
+        } /*TEST_CASE(add4)*/
+
+        TEST_CASE("mult1", "[quantity]") {
+            constexpr bool c_debug_flag = true;
+
+            // can get bits from /dev/random by uncommenting the 2nd line below
+            //uint64_t seed = xxx;
+            //rng::Seed<xoshio256ss> seed;
+
+            //auto rng = xo::rng::xoshiro256ss(seed);
+
+            scope log(XO_DEBUG2(c_debug_flag, "TEST_CASE.mult1"));
+            //log && log("(A)", xtag("foo", foo));
+
+            auto q0 = milliseconds(5);
+            auto q1 = seconds(60);
+            auto q2 = minutes(1);
+
+            {
+                auto r = q0 * q1;
+
+                /* taking unit from LHS */
+                REQUIRE(strcmp(r.unit_cstr(), "ms^2") == 0);
+
+                log && log(xtag("q0", q0), xtag("q1", q1), xtag("q0*q1", r));
+
+                REQUIRE(r.scale() == 300000);
+            }
+
+            {
+                auto r = q1 * q2;
+
+                /* taking unit from LHS */
+                REQUIRE(strcmp(r.unit_cstr(), "s^2") == 0);
+
+                log && log(xtag("q1", q1), xtag("q2", q2), xtag("q1*q2", r));
+
+                REQUIRE(r.scale() == 3600);
+            }
+
+            {
+                auto r = q2 * q1;
+
+                /* taking unit from LHS */
+                REQUIRE(strcmp(r.unit_cstr(), "min^2") == 0);
+
+                log && log(xtag("q1", q1), xtag("q2", q2), xtag("q2*q1", r));
+
+                REQUIRE(r.scale() == 1);
+            }
+        } /*TEST_CASE(mult1)*/
+
     } /*namespace ut*/
 } /*namespace xo*/
 
