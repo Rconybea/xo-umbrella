@@ -109,6 +109,9 @@ namespace xo {
                 return Quantity2::promote(this->in_units_of<typename Quantity2::unit_type, tmp_repr_type>());
             }
 
+            void display(std::ostream & os) const {
+                os << this->scale() << unit_cstr();
+            }
 
             quantity & operator=(quantity const & x) = default;
             quantity & operator=(quantity && x) = default;
@@ -148,6 +151,13 @@ namespace xo {
         template <typename Quantity>
         inline Quantity operator- (Quantity x) {
             return Quantity::promote(- x.scale());
+        }
+
+        template <typename Unit, typename Repr>
+        inline std::ostream &
+        operator<< (std::ostream & os, quantity<Unit, Repr> const & x) {
+            x.display(os);
+            return os;
         }
 
         namespace qty {
