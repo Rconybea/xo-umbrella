@@ -136,7 +136,18 @@ namespace xo {
         constexpr auto stringliteral_from_ratio() {
             static_assert(ratio_concept<Ratio>);
 
-            return ratio2str_aux<Ratio::type::num, Ratio::type::den>().value;
+            using lowest_terms_type = Ratio::type;
+
+            return ratio2str_aux<lowest_terms_type::num, lowest_terms_type::den>().value;
+        };
+
+        template <typename Ratio>
+        constexpr char const * cstr_from_ratio() {
+            static_assert(ratio_concept<Ratio>);
+
+            using lowest_terms_type = Ratio::type;
+
+            return ratio2str_aux<lowest_terms_type::num, lowest_terms_type::den>().value.c_str();
         };
 
         // ----- exponent2str_aux -----
