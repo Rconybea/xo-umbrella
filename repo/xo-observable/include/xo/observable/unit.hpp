@@ -175,15 +175,36 @@ namespace xo {
                                           bpu_list< native_bpu<native_dim_id::mass,
                                                                std::ratio<1000>> > >;
 
-            using second     = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::time,
-                                                               std::ratio<1>> > >;
-            using minute     = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::time,
-                                                               std::ratio<60>> > >;
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::mass, std::ratio<1000>> {
+                static constexpr auto value = stringliteral("kg");
+            };
+
+            using millisecond = wrap_unit< std::ratio<1>, bpu_list< native_bpu<native_dim_id::time,
+                                                                               std::ratio<1,1000>> > >;
+
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<1,1000>> {
+                static constexpr auto value = stringliteral("ms");
+            };
+
+            using second     = wrap_unit< std::ratio<1>, bpu_list< native_bpu<native_dim_id::time,
+                                                                              std::ratio<1>> > >;
+            using minute     = wrap_unit< std::ratio<1>, bpu_list< native_bpu<native_dim_id::time,
+                                                                              std::ratio<60>> > >;
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<60>> {
+                static constexpr auto value = stringliteral("min");
+            };
+
             using hour       = wrap_unit< std::ratio<1>,
                                           bpu_list< native_bpu<native_dim_id::time,
                                                                std::ratio<3600>> > >;
+
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<3600>> {
+                static constexpr auto value = stringliteral("hr");
+            };
 
             /* this would be volatility in per-root-second units;  probably want something else */
             using volatility = wrap_unit< std::ratio<1>,
