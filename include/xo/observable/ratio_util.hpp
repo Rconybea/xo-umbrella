@@ -130,7 +130,7 @@ namespace xo {
         // ----- stringliteral_from_ratio -----
 
         /** Example:
-         *  - ratio2str<std::ratio<2,3> -> "^(2,3)"
+         *  - stringliteral_from_ratio<std::ratio<2,3> -> "^(2,3)"
          **/
         template <typename Ratio>
         constexpr auto stringliteral_from_ratio() {

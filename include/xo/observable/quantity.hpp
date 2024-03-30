@@ -33,22 +33,10 @@ namespace xo {
             using repr_type = Repr;
 
             /* non-unity compile-time scale factors can arise during unit conversion;
-             * for examle see method quantity::in_units_of()
+             * for example see method quantity::in_units_of()
              */
             static_assert(std::same_as< typename Unit::scalefactor_type, std::ratio<1> >);
             static_assert(std::same_as< typename Unit::canon_type, typename Unit::canon_type >);
-
-#ifdef NOT_USING
-            template <typename Repr2, typename Unit2>
-            quantity<Repr, Unit> add(quantity<Repr2, Unit2> x) {
-                static_assert(std::same_as<typename Unit::dimension_type::canon_type, typename Unit2::dimension_type::canon_type>);
-
-                using result_repr_type = std::common_type_t<Repr, Repr2>;
-                using result_type = quantity<result_repr_type, Unit>;
-
-                result_type qx = x.operator result_type();
-            }
-#endif
 
         public:
             constexpr quantity() = default;
@@ -159,19 +147,6 @@ namespace xo {
 
         namespace qty {
 #ifdef OBSOLETE
-            /** Example:
-             *    qty::time<units::u_second, int64_t> q = qty::seconds(1)
-             **/
-            template <typename Unit = units::u_second, typename Repr = double>
-            using time = quantity<Repr, Unit, dim::time>;
-
-            /** Example
-             *    qty::nanotm t;
-             *  is the same as
-             *    qty::time<units::u_nanosecond, int64_t> t;
-             **/
-            template <typename Repr = int64_t>
-            using nanotm = time<units::u_nanosecond, Repr>;
 
             template <typename Repr = double>
             inline auto nanos(Repr x) -> quantity<Repr, units::u_nanosecond> {
