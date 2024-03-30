@@ -16,7 +16,7 @@ namespace xo {
 
         using xo::obs::native_dim_id;
         using xo::obs::native_unit_abbrev_v;
-        using xo::obs::scaled_native_unit_abbrev_v;
+        using xo::obs::units::scaled_native_unit_abbrev_v;
         //using xo::obs::native_dim_abbrev;
         using xo::obs::stringliteral_compare;
         using xo::obs::literal_size_v;

@@ -58,18 +58,16 @@ namespace xo {
 
         // ----- scaled_native_unit_abbrev_helper -----
 
-        /* Require: InnerScale is ratio type; InnerScale >= 1 */
-        template <native_dim_id DimId, typename InnerScale>
-        struct scaled_native_unit_abbrev;
+        namespace units {
+            /* Require: InnerScale is ratio type; InnerScale >= 1 */
+            template <native_dim_id DimId, typename InnerScale>
+            struct scaled_native_unit_abbrev;
 
-        template <native_dim_id DimId>
-        struct scaled_native_unit_abbrev<DimId, std::ratio<1>> {
-            static constexpr auto value = native_unit_abbrev_v<DimId>;
-        };
+            template <native_dim_id DimId>
+            struct scaled_native_unit_abbrev<DimId, std::ratio<1>> {
+                static constexpr auto value = native_unit_abbrev_v<DimId>;
+            };
 
-
-        template <native_dim_id DimId, typename InnerScale>
-        constexpr auto  scaled_native_unit_abbrev_v = scaled_native_unit_abbrev<DimId, InnerScale>::value;
             template <native_dim_id DimId, typename InnerScale>
             struct scaled_native_unit_abbrev {
                 /* e.g. unit of '10000 grams' will have abbrev '1000g' in absence
@@ -125,7 +123,7 @@ namespace xo {
         constexpr auto bpu_assemble_abbrev_helper() {
             static_assert(ratio_concept<Power>);
 
-            return stringliteral_concat(scaled_native_unit_abbrev_v<dim_id, InnerScale>.value_,
+            return stringliteral_concat(units::scaled_native_unit_abbrev_v<dim_id, InnerScale>.value_,
                                         stringliteral_from_exponent<Power>().value_);
         };
 
