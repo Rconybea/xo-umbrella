@@ -1,0 +1,32 @@
+# never --squash when doing push
+
+cd $(git topdir)
+
+git subtree push --prefix repo/xo-cmake git@github.com:rconybea/xo-cmake.git main
+git subtree push --prefix repo/xo-indentlog git@github.com:rconybea/indentlog.git main
+git subtree push --prefix repo/xo-refcnt git@github.com:rconybea/refcnt.git main
+git subtree push --prefix repo/xo-subsys git@github.com:rconybea/subsys.git main
+git subtree push --prefix repo/xo-randomgen git@github.com:rconybea/randomgen.git main
+git subtree push --prefix repo/xo-ordinaltree git@github.com:rconybea/xo-ordinaltree.git main
+git subtree push --prefix repo/xo-pyutil git@github.com:rconybea/xo-pyutil.git main
+git subtree push --prefix repo/xo-pyreflect git@github.com:rconybea/xo-pyreflect.git main
+git subtree push --prefix repo/xo-printjson git@github.com:rconybea/xo-printjson.git main
+git subtree push --prefix repo/xo-pyprintjson git@github.com:rconybea/xo-pyprintjson.git main
+git subtree push --prefix repo/xo-callback git@github.com:rconybea/xo-callback.git main
+git subtree push --prefix repo/xo-webutil git@github.com:rconybea/xo-webutil.git main
+git subtree push --prefix repo/xo-pywebutil git@github.com:rconybea/xo-pywebutil.git main
+git subtree push --prefix repo/xo-reactor git@github.com:rconybea/xo-reactor.git main
+git subtree push --prefix repo/xo-pyreactor git@github.com:rconybea/xo-pyreactor.git main
+git subtree push --prefix repo/xo-simulator git@github.com:rconybea/xo-simulator.git main
+git subtree push --prefix repo/xo-process git@github.com:rconybea/xo-process.git main
+git subtree push --prefix repo/xo-pyprocess git@github.com:rconybea/xo-pyprocess.git main
+git subtree push --prefix repo/xo-websock git@github.com:rconybea/xo-websock.git main
+git subtree push --prefix repo/xo-pywebsock git@github.com:rconybea/xo-pywebsock.git main
+git subtree push --prefix repo/xo-statistics git@github.com:rconybea/xo-statistics.git main
+git subtree push --prefix repo/xo-kalmanfilter git@github.com:rconybea/xo-kalmanfilter.git main
+git subtree push --prefix repo/xo-pykalmanfilter git@github.com:rconybea/xo-pykalmanfilter.git main
+git subtree push --prefix repo/xo-distribution git@github.com:rconybea/xo-distribution.git main
+git subtree push --prefix repo/xo-pydistribution git@github.com:rconybea/xo-pydistribution.git main
+
+git subtree push --prefix repo/xo-optionutil git@github.com:rconybea/xo-optionutil.git main
+git subtree push --prefix repo/xo-observable git@github.com:rconybea/xo-observable.git main
