@@ -348,7 +348,7 @@ namespace xo {
             using _tmp1_scalefactor_type = _tmp1_mult_type::outer_scalefactor_type;
             using _tmp1_bpu_list_type = _tmp1_mult_type::bpu_list_type;
 
-            using _tmp2_mult_type = di_cartesian_product<R1, _tmp1_bpu_list_type>::type;
+            using _tmp2_mult_type = di_cartesian_product<R1, _tmp1_bpu_list_type>;
             using _tmp2_scalefactor_type = _tmp2_mult_type::outer_scalefactor_type;
             using _tmp2_bpu_list_type = _tmp2_mult_type::bpu_list_type;
 
