@@ -161,13 +161,20 @@ namespace xo {
         }
 
         namespace qty {
-#ifdef OBSOLETE
+            template <typename Repr = double>
+            inline auto grams(Repr x) -> quantity<units::gram, Repr> {
+                return quantity<units::gram, Repr>::promote(x);
+            };
 
             template <typename Repr = double>
-            inline auto nanos(Repr x) -> quantity<Repr, units::u_nanosecond> {
-                return quantity<Repr, units::u_nanosecond>::promote(x);
+            inline auto kilograms(Repr x) -> quantity<units::gram, Repr> {
+                return quantity<units::kilogram, Repr>::promote(x);
+            };
+
+            template <typename Repr = double>
+            inline auto milliseconds(Repr x) -> quantity<units::millisecond, Repr> {
+                return quantity<units::millisecond, Repr>::promote(x);
             }
-#endif
 
             template <typename Repr = double>
             inline auto seconds(Repr x) -> quantity<units::second, Repr> {
