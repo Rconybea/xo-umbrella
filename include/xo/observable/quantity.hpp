@@ -53,6 +53,22 @@ namespace xo {
             static constexpr quantity promote(Repr x) { return quantity(x); }
 
             template <typename Quantity2>
+            auto multiply(Quantity2 y) const {
+                // static_assert(quantity_concept<Quantity2>);
+
+                /* unit: may have non-unit scalefactor_type */
+                using unit_type = unit_cartesian_product_t<Unit, typename Quantity2::unit_type>;
+                using norm_unit_type = normalize_unit_t<unit_type>;
+
+                using repr_type = std::common_type_t<repr_type, typename Quantity2::repr_type>;
+
+                repr_type r_scale = ((scale() * y.scale() * unit_type::scalefactor_type::num)
+                                     / unit_type::scalefactor_type::den);
+
+                return quantity<norm_unit_type, repr_type>::promote(r_scale);
+            }
+
+            template <typename Quantity2>
             quantity operator+=(Quantity2 y) {
                 static_assert(std::same_as<
                               typename unit_type::canon_type,
@@ -151,6 +167,14 @@ namespace xo {
         template <typename Quantity>
         inline Quantity operator- (Quantity x) {
             return Quantity::promote(- x.scale());
+        }
+
+        template <typename Quantity1, typename Quantity2>
+        inline auto operator* (Quantity1 x, Quantity2 y) {
+            //static_assert(quantity_concept<Quantity1>);
+            //static_assert(quantity_concept<Quantity2>);
+
+            return x.multiply(y);
         }
 
         template <typename Unit, typename Repr>
