@@ -41,6 +41,7 @@ namespace xo {
         public:
             constexpr quantity() = default;
             constexpr quantity(quantity const & x) = default;
+            constexpr quantity(quantity && x) = default;
 
             /** @brief get scale value (relative to unit) (@ref scale_) **/
             constexpr Repr scale() const { return scale_; }
@@ -107,6 +108,10 @@ namespace xo {
 
                 return Quantity2::promote(this->in_units_of<typename Quantity2::unit_type, tmp_repr_type>());
             }
+
+
+            quantity & operator=(quantity const & x) = default;
+            quantity & operator=(quantity && x) = default;
 
         private:
             explicit constexpr quantity(Repr x) : scale_{x} {}
