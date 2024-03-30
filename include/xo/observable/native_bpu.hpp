@@ -79,6 +79,9 @@ namespace xo {
                                                                    native_unit_abbrev_helper<DimId>::value.value_);
             };
 
+            template <native_dim_id DimId, typename InnerScale>
+            constexpr auto scaled_native_unit_abbrev_v = scaled_native_unit_abbrev<DimId, InnerScale>::value;
+        }
 
         // ----- native_bpu -----
 
