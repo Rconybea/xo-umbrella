@@ -2,8 +2,8 @@
 
 #pragma once
 
+#include "quantity_concept.hpp"
 #include "unit.hpp"
-#include <concepts>
 
 namespace xo {
     namespace obs {
