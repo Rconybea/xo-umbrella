@@ -8,10 +8,6 @@
 
 namespace xo {
     namespace obs {
-        /* TODO:
-         * - native_bpu -> bpu
-         */
-
         // ----- native_bpu -----
 
         /** @class native_bpu
