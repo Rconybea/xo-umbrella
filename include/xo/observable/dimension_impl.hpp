@@ -13,6 +13,10 @@
 #include <string_view>
 
 namespace xo {
+    /* TODO:
+     * - bpu_list -> bpu_node
+     */
+
     namespace obs {
         // ----- lookup_bpu -----
 

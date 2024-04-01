@@ -10,6 +10,11 @@
 
 namespace xo {
     namespace obs {
+        /* TODO:
+         * - native_unit -> basis_unit
+         * - native_bpu -> bpu
+         */
+
         /** @class native_unit
          *
          *  @brief A dimensionless multiple with natively-specified (i.e. at compile-time) dimension
@@ -104,7 +109,8 @@ namespace xo {
 
             /* native_unit provides
              * - inner_scalefactor_type
-             * - native_dim_id
+             * - c_native_dim :: native_dim_id
+             * - c_native_unit :: native_unit_id
              */
 
             using power_type = Power;
