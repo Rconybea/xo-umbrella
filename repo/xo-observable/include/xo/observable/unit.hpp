@@ -92,6 +92,19 @@ namespace xo {
         template <typename U1, typename U2>
         using unit_cartesian_product_t = unit_cartesian_product<U1, U2>::type;
 
+        // ----- unit_divide -----
+
+        template <typename U1, typename U2>
+        struct unit_divide {
+            static_assert(unit_concept<U1>);
+            static_assert(unit_concept<U2>);
+
+            using type = unit_cartesian_product_t<U1, unit_invert_t<U2>>;
+        };
+
+        template <typename U1, typename U2>
+        using unit_divide_t = unit_divide<U1, U2>::type;
+
         // ----- same_dimension -----
 
         /* true iff U1 and U2 represent the same dimension,  i.e. differ only in dimensionless scaling factor
