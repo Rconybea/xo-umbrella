@@ -79,6 +79,19 @@ namespace xo {
             }
 
             template <typename Quantity2>
+            auto divide(Quantity2 y) const {
+                using unit_type = unit_divide_t<Unit, typename Quantity2::unit_type>;
+                using norm_unit_type = normalize_unit_t<unit_type>;
+                using repr_type = std::common_type_t<repr_type, typename Quantity2::repr_type>;
+
+                repr_type r_scale = ((scale() * unit_type::scalefactor_type::num)
+                                     / (y.scale() * unit_type::scalefactor_type::den));
+
+                return quantity<norm_unit_type, repr_type>::promote(r_scale);
+            }
+
+            // quantity operator*=()
+            // quantity operator/=()
 
             /**
              *  scale by dimensionless number
