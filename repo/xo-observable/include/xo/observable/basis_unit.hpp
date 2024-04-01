@@ -18,7 +18,7 @@ namespace xo {
             static constexpr dim c_native_dim = BasisDim;
             static constexpr basis_unit c_native_unit = NativeUnitId;
 
-            using inner_scalefactor_type = InnerScale;
+            using scalefactor_type = InnerScale;
         };
 
         /** Using struct wrapper so we can partially specialize
