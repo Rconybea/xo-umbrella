@@ -168,7 +168,7 @@ namespace xo {
             }
 
             template <typename Unit2, typename Repr2>
-            repr_type in_units_of() const {
+            Repr2 in_units_of() const {
                 // static_assert(dimension_of<Unit> == dimension_of<Unit2>);  // discard all the scaling values
 
                 static_assert(same_dimension_v<Unit, Unit2>);
