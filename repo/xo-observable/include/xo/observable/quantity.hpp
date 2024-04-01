@@ -7,6 +7,13 @@
 
 namespace xo {
     namespace obs {
+        /** @class promoter
+         *
+         *  Aux class assister for quantity::promote()
+         **/
+        template <typename Unit, typename Repr, bool Dimensionless = dimensionless_v<Unit> >
+        struct promoter;
+
         // ----- quantity -----
 
         /** @class quantity
@@ -50,7 +57,10 @@ namespace xo {
             /** @brief return unit quantity -- amount with this Unit that has representation = 1 **/
             static constexpr quantity unit_quantity() { return quantity(1); }
             /** @brief promote representation to quantity.  Same as multiplying by Unit **/
-            static constexpr quantity promote(Repr x) { return quantity(x); }
+            static constexpr auto promote(Repr x) {
+                //std::cerr << "quantity<U,R>::promote: x=" << x << ", R=" << reflect::Reflect::require<Repr>()->canonical_name() << std::endl;
+                return promoter<Unit, Repr>::promote(x);
+            }
 
             template <typename Quantity2>
             auto multiply(Quantity2 y) const {
@@ -135,10 +145,28 @@ namespace xo {
         private:
             explicit constexpr quantity(Repr x) : scale_{x} {}
 
+            friend class promoter<Unit, Repr, true>;
+            friend class promoter<Unit, Repr, false>;
+
         private:
             /** @brief quantity represents this multiple of a unit (that has compile-time outer-scalefactor of 1) **/
             Repr scale_ = 0;
         }; /*quantity*/
+
+        // ----- promoter -----
+
+        /* collapse dimensionless quantity to its repr_type> */
+        template <typename Unit, typename Repr>
+        struct promoter<Unit, Repr, /*Dimensionless*/ true> {
+            static constexpr Repr promote(Repr x) { return x; };
+        };
+
+        template <typename Unit, typename Repr>
+        struct promoter<Unit, Repr, /*Dimensionless*/ false> {
+            static constexpr quantity<Unit, Repr> promote(Repr x) { return quantity<Unit, Repr>(x); }
+        };
+
+        // ----- operator+ -----
 
         template <typename Quantity1, typename Quantity2>
         inline Quantity1 operator+ (Quantity1 x, Quantity2 y) {
