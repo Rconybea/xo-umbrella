@@ -9,6 +9,29 @@
 
 namespace xo {
     namespace obs {
+        // ----- ratio_floor -----
+
+        template <typename Ratio>
+        struct ratio_floor {
+            using type = std::ratio<Ratio::num/Ratio::den>;
+        };
+
+        template <typename Ratio>
+        using ratio_floor_t = ratio_floor<Ratio>::type;
+
+        // ----- ratio_frac -----
+
+        template <typename Ratio>
+        struct ratio_frac {
+            static_assert(ratio_concept<Ratio>);
+
+            using type = std::ratio_subtract<typename Ratio::type,
+                                             ratio_floor_t<Ratio>>::type;
+        };
+
+        template <typename Ratio>
+        using ratio_frac_t = ratio_frac<Ratio>::type;
+
         // ----- ratio_power -----
 
         /** ratio to an integer power

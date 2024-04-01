@@ -74,7 +74,10 @@ namespace xo {
 
         // ----- bpu_rescale -----
 
-        /** We have B satisfying native_bpu_concept:
+        /**
+         *  Part I
+         *  ------
+         *  We have B satisfying native_bpu_concept:
          *  B represents a basis-power-unit
          *          p
          *     (b.u)
@@ -109,6 +112,20 @@ namespace xo {
          *   bpu_rescale<B,NewInnerScale>::outer_scalefactor_type -> 'a
          *   bpu_rescale<B,NewInnerScale>::native_bpu_type -> B'
          *
+         *  Part II
+         *  -------
+         *  Want ability to rescale when p is a non-integer rational.
+         *  In that case a' = (b/b')^p won't in general be exactly-representable,
+         *  so we are forced to accept some loss of precision.
+         *
+         *  Want to write:
+         *    p as p' + q' with:
+         *       p' = integer part of p
+         *       q' = fractional part of p
+         *  Then we can write
+         *    a' as c'.d' with:
+         *       c' = (b/b')^p'   [exactly represented]
+         *       d' = (b/b')^q'   [floating point]
          **/
         template <typename B,
                   typename NewInnerScale>
@@ -125,21 +142,30 @@ namespace xo {
             using _t1_type = std::ratio_divide
                 < typename B::scalefactor_type, NewInnerScale >;
 
+            /* p' */
+            using p1_type = ratio_floor_t<typename B::power_type>;
+            /* q' */
+            using q1_type = ratio_frac_t<typename B::power_type>;
+
             /** require p must be integral **/
-            static_assert(B::power_type::den == 1);
+            static_assert(p1_type::den == 1);
+
+            /* note: constexpr from c++26,  but already present in earlier gcc */
+            static constexpr double c_outer_scalefactor_inexact = ::pow(from_ratio<double, _t1_type>(),
+                                                                        from_ratio<double, q1_type>());
 
             /**            p
              *  a' = (b/b')
              **/
-            using outer_scalefactor_type = ratio_power_t< _t1_type, B::power_type::num >;
+            using outer_scalefactor_type = ratio_power_t< _t1_type, p1_type::num >;
 
             /**
              *          p
              *    (b'.u)
              **/
             using native_bpu_type = bpu < B::c_native_dim,
-                                                 NewInnerScale,
-                                                 typename B::power_type >;
+                                          NewInnerScale,
+                                          typename B::power_type >;
         };
 
         // ----- bpu_invert -----
@@ -154,9 +180,10 @@ namespace xo {
                 >;
         };
 
-        // ----- bpu_inner_multiply -----
+        // ----- bpu_product -----
 
-        /** Suppose we have two native_bpu's that scale the same dim:
+        /** Suppose we have two native_bpu's {B1, B2} that scale the same native basis unit u.
+         *  B1,B2 may be using different units {b1,b2} for u
          *
          *                            p1
          *    B1 (b1, u, p1)  = (b1.u)
@@ -176,16 +203,20 @@ namespace xo {
          *
          *  We can use bpu_rescale to rewrite B2 in the form
          *
-         *                   p2
-         *    B2' = a'.(b1.u)
+         *                        p2
+         *    B2' = (c'.d').(b1.u)
+         *
+         *  where c' is exact, d' is inexact.
+         *  (note however d' will be exactly 1.0 whenever p2 is integral)
          *
          *  so we have
          *
-         *                      p1         p2
-         *    (B1 x B2) = (b1.u)  a'.(b1.u)
+         *                      p1              p2
+         *    (B1 x B2) = (b1.u)  (c'.d').(b1.u)
          *
-         *                         p1+p2
-         *              = a'.(b1.u)
+         *                              p1+p2
+         *              = (c'.d').(b1.u)
+         *
          **/
         template < typename B1, typename B2 >
         struct bpu_product {
@@ -193,7 +224,12 @@ namespace xo {
             static_assert(native_bpu_concept<B2>);
             static_assert(B1::c_native_dim == B2::c_native_dim);
 
-            /* a'.B2' = a'.(b1.u)^p2 */
+            /* c'.d'.B2' = c'.d'.(b1.u)^p2
+             *
+             *  _b2p_rescaled_type::native_bpu_type          -> B2' (b1, u, p2)   [same basis scalefactor as B1]
+             *  _b2p_rescaled_type::outer_scalefactor_type   -> c'                [exact factor]
+             *  _b2p_rescaled_type::c_outer_scalefactor_type -> d'                [inexact factor, from fractional powers]
+             */
             using _b2p_rescaled_type = bpu_rescale<B2,
                                                    typename B1::scalefactor_type>;
             /* (b1.u)^p2 */
@@ -205,8 +241,10 @@ namespace xo {
                 typename B2::power_type
                 >;
 
-            /* a' */
+            /* c' */
             using outer_scalefactor_type = _b2p_rescaled_type::outer_scalefactor_type;
+            /* d' */
+            static constexpr double c_outer_scalefactor_inexact = _b2p_rescaled_type::c_outer_scalefactor_inexact;
 
             /* (b1.u)^(p1+p2) */
             using native_bpu_type = bpu <

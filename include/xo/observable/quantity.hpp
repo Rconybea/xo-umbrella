@@ -61,7 +61,7 @@ namespace xo {
              *    q.basis_power<dim::mass> -> 0
              **/
             template <dim BasisDim, typename PowerRepr = int>
-            static constexpr PowerRepr basis_power = from_ratio<PowerRepr, typename find_bpu_t<BasisDim>::power_type>();
+            static constexpr PowerRepr c_basis_power = from_ratio<PowerRepr, typename find_bpu_t<BasisDim>::power_type>();
 
             /** @brief get scale value (relative to unit) (@ref scale_) **/
             constexpr Repr scale() const { return scale_; }
@@ -80,24 +80,43 @@ namespace xo {
                 static_assert(quantity_concept<Quantity2>);
 
                 /* unit: may have non-unit scalefactor_type */
-                using unit_type = unit_cartesian_product_t<Unit, typename Quantity2::unit_type>;
-                using norm_unit_type = normalize_unit_t<unit_type>;
+                using unit_product_type = unit_cartesian_product<Unit, typename Quantity2::unit_type>;
+                using exact_unit_type = unit_product_type::exact_unit_type;
+                using norm_unit_type = normalize_unit_t<exact_unit_type>;
+
+                using exact_scalefactor_type = exact_unit_type::scalefactor_type;
+                constexpr double c_scalefactor_inexact = unit_product_type::c_scalefactor_inexact;
 
                 using repr_type = std::common_type_t<repr_type, typename Quantity2::repr_type>;
 
-                repr_type r_scale = ((scale() * y.scale() * unit_type::scalefactor_type::num)
-                                     / unit_type::scalefactor_type::den);
+                repr_type r_scale = ((scale() * y.scale() * c_scalefactor_inexact * exact_scalefactor_type::num)
+                                     / exact_scalefactor_type::den);
+
+#              ifdef NOT_USING_DEBUG
+                log && log(xtag("unit_product_type", Reflect::require<unit_product_type>()->canonical_name()));
+                log && log(xtag("exact_unit_type", Reflect::require<exact_unit_type>()->canonical_name()));
+                log && log(xtag("norm_unit_type", Reflect::require<norm_unit_type>()->canonical_name()));
+                log && log(xtag("exact_scalefactor_type", Reflect::require<exact_scalefactor_type>()->canonical_name()));
+                log && log(xtag("c_scalefactor_inexact", c_scalefactor_inexact));
+                log && log(xtag("repr_type", Reflect::require<repr_type>()->canonical_name()));
+                log && log(xtag("repr_type", Reflect::require<repr_type>()->canonical_name()));
+#              endif
 
                 return quantity<norm_unit_type, repr_type>::promote(r_scale);
             }
 
             template <typename Quantity2>
             auto divide(Quantity2 y) const {
-                using unit_type = unit_divide_t<Unit, typename Quantity2::unit_type>;
-                using norm_unit_type = normalize_unit_t<unit_type>;
+                using unit_divide_type = unit_divide<Unit, typename Quantity2::unit_type>;
+                using exact_unit_type = unit_divide_type::exact_unit_type;
+                using norm_unit_type = normalize_unit_t<exact_unit_type>;
+
+                using exact_scalefactor_type = exact_unit_type::scalefactor_type;
+                constexpr double c_scalefactor_inexact = unit_divide_type::c_scalefactor_inexact;
+
                 using repr_type = std::common_type_t<repr_type, typename Quantity2::repr_type>;
 
-                repr_type r_scale = ((scale() * unit_type::scalefactor_type::num)
+                repr_type r_scale = ((scale() * c_scalefactor_inexact * unit_type::scalefactor_type::num)
                                      / (y.scale() * unit_type::scalefactor_type::den));
 
                 return quantity<norm_unit_type, repr_type>::promote(r_scale);
@@ -154,7 +173,10 @@ namespace xo {
 
                 static_assert(same_dimension_v<Unit, Unit2>);
 
-                using _convert_to_u2_type = unit_cartesian_product_t<Unit, unit_invert_t<Unit2>>;
+                using _convert_to_u2_type = unit_cartesian_product<Unit, unit_invert_t<Unit2>>;
+
+                using exact_scalefactor_type = _convert_to_u2_type::exact_unit_type::scalefactor_type;
+                constexpr double c_scalefactor_inexact = _convert_to_u2_type::c_scalefactor_inexact;
 
                 // _convert_u2_type
                 //  - scalefactor_type
@@ -163,7 +185,7 @@ namespace xo {
 
                 /* if _convert_u2_type isn't dimensionless,  then {Unit2, Unit} have different dimensions */
 
-                return ((this->scale_ * _convert_to_u2_type::scalefactor_type::num) / _convert_to_u2_type::scalefactor_type::den);
+                return ((this->scale_ * c_scalefactor_inexact * exact_scalefactor_type::num) / exact_scalefactor_type::den);
             }
 
             template <typename Quantity2>
