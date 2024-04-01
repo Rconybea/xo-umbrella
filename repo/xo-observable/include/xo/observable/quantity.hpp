@@ -79,6 +79,34 @@ namespace xo {
             }
 
             template <typename Quantity2>
+
+
+
+            }
+
+
+
+
+            }
+
+            template <typename Unit2, typename Repr2>
+            repr_type in_units_of() const {
+                // static_assert(dimension_of<Unit> == dimension_of<Unit2>);  // discard all the scaling values
+
+                static_assert(same_dimension_v<Unit, Unit2>);
+
+                using _convert_to_u2_type = unit_cartesian_product_t<Unit, unit_invert_t<Unit2>>;
+
+                // _convert_u2_type
+                //  - scalefactor_type
+                //  - dim_type
+                //  - canon_type
+
+                /* if _convert_u2_type isn't dimensionless,  then {Unit2, Unit} have different dimensions */
+
+                return ((this->scale_ * _convert_to_u2_type::scalefactor_type::num) / _convert_to_u2_type::scalefactor_type::den);
+            }
+
             quantity operator+=(Quantity2 y) {
                 static_assert(std::same_as<
                               typename unit_type::canon_type,
@@ -104,24 +132,6 @@ namespace xo {
                 this->scale_ -= y2.scale();
 
                 return *this;
-            }
-
-            template <typename Unit2, typename Repr2>
-            repr_type in_units_of() const {
-                // static_assert(dimension_of<Unit> == dimension_of<Unit2>);  // discard all the scaling values
-
-                static_assert(same_dimension_v<Unit, Unit2>);
-
-                using _convert_to_u2_type = unit_cartesian_product_t<Unit, unit_invert_t<Unit2>>;
-
-                // _convert_u2_type
-                //  - scalefactor_type
-                //  - dim_type
-                //  - canon_type
-
-                /* if _convert_u2_type isn't dimensionless,  then {Unit2, Unit} have different dimensions */
-
-                return ((this->scale_ * _convert_to_u2_type::scalefactor_type::num) / _convert_to_u2_type::scalefactor_type::den);
             }
 
             /* convert to quantity with same dimension, different {unit_type, repr_type} */
