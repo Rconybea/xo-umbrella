@@ -80,8 +80,20 @@ namespace xo {
 
             template <typename Quantity2>
 
+            /**
+             *  scale by dimensionless number
+             **/
+            template <typename Repr2>
+            auto scale_by(Repr2 x) const {
+                static_assert(!quantity_concept<Repr2>);
 
+                using r_repr_type = std::common_type_t<repr_type, Repr2>;
 
+                r_repr_type r_scale = this->scale_ * x;
+
+                //std::cerr << "quantity::scale_by: scale=" << scale << ", repr_type=" << reflect::Reflect::require<repr_type>()->canonical_name() << std::endl;
+
+                return quantity<unit_type, r_repr_type>::promote(r_scale);
             }
 
 
