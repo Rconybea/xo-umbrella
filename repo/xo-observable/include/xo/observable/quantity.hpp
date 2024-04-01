@@ -262,6 +262,96 @@ namespace xo {
             return x.multiply(y);
         }
 
+        /** e.g. DECLARE_LH_MULT(int32_t) **/
+#      define DECLARE_LH_MULT(lhtype)                  \
+        template <typename Quantity>                   \
+        inline auto                                    \
+        operator* (lhtype x, Quantity y) {             \
+            static_assert(quantity_concept<Quantity>); \
+            return y.scale_by(x);                      \
+        }
+
+        DECLARE_LH_MULT(int8_t);
+        DECLARE_LH_MULT(uint8_t);
+        DECLARE_LH_MULT(int16_t);
+        DECLARE_LH_MULT(uint16_t);
+        DECLARE_LH_MULT(int32_t);
+        DECLARE_LH_MULT(uint32_t);
+        DECLARE_LH_MULT(int64_t);
+        DECLARE_LH_MULT(uint64_t);
+        DECLARE_LH_MULT(float);
+        DECLARE_LH_MULT(double);
+#      undef DECLARE_LH_MULT
+
+        /** e.g. DECLARE_RH_MULT(int32_t) **/
+#      define DECLARE_RH_MULT(rhtype)                  \
+        template <typename Quantity>                   \
+        inline auto                                    \
+        operator* (Quantity x, rhtype y) {             \
+            static_assert(quantity_concept<Quantity>); \
+            return x.scale_by(y);                      \
+        }
+
+        DECLARE_RH_MULT(int8_t);
+        DECLARE_RH_MULT(uint8_t);
+        DECLARE_RH_MULT(int16_t);
+        DECLARE_RH_MULT(uint16_t);
+        DECLARE_RH_MULT(int32_t);
+        DECLARE_RH_MULT(uint32_t);
+        DECLARE_RH_MULT(int64_t);
+        DECLARE_RH_MULT(uint64_t);
+        DECLARE_RH_MULT(float);
+        DECLARE_RH_MULT(double);
+#      undef DECLARE_LH_MULT
+
+        template <typename Quantity1, typename Quantity2>
+        inline auto operator/ (Quantity1 x, Quantity2 y) {
+            static_assert(quantity_concept<Quantity1>);
+            static_assert(quantity_concept<Quantity2>);
+
+            return x.divide(y);
+        }
+
+#      define DECLARE_LH_DIV(lhtype)                   \
+        template <typename Quantity>                   \
+        inline auto                                    \
+        operator/ (lhtype x, Quantity y) {             \
+            static_assert(quantity_concept<Quantity>); \
+            return y.divide_into(x);                   \
+        }
+
+        DECLARE_LH_DIV(int8_t);
+        DECLARE_LH_DIV(uint8_t);
+        DECLARE_LH_DIV(int16_t);
+        DECLARE_LH_DIV(uint16_t);
+        DECLARE_LH_DIV(int32_t);
+        DECLARE_LH_DIV(uint32_t);
+        DECLARE_LH_DIV(int64_t);
+        DECLARE_LH_DIV(uint64_t);
+        DECLARE_LH_DIV(float);
+        DECLARE_LH_DIV(double);
+#      undef DECLARE_LH_DIV
+
+#      define DECLARE_RH_DIV(rhtype) \
+        template <typename Quantity> \
+        inline auto \
+        operator/ (Quantity x, rhtype y) { \
+            static_assert(quantity_concept<Quantity>); \
+            return x.divide_by(y); \
+        }
+
+        DECLARE_RH_DIV(int8_t)
+        DECLARE_RH_DIV(uint8_t)
+        DECLARE_RH_DIV(int16_t)
+        DECLARE_RH_DIV(uint16_t)
+        DECLARE_RH_DIV(int32_t)
+        DECLARE_RH_DIV(uint32_t)
+        DECLARE_RH_DIV(int64_t)
+        DECLARE_RH_DIV(uint64_t)
+        DECLARE_RH_DIV(float)
+        DECLARE_RH_DIV(double)
+#      undef DECLARE_RH_DIV
+
         template <typename Unit, typename Repr>
         inline std::ostream &
         operator<< (std::ostream & os, quantity<Unit, Repr> const & x) {
