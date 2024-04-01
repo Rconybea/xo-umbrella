@@ -264,6 +264,8 @@ namespace xo {
                                                       typename DI::rest_type>;
 
             using outer_scalefactor_type = typename _tmp::outer_scalefactor_type;
+            static constexpr double c_outer_scalefactor_inexact = _tmp::c_outer_scalefactor_inexact;
+
             using bpu_list_type = typename _tmp::bpu_list_type;
 
             static_assert(ratio_concept<outer_scalefactor_type>);
@@ -274,6 +276,8 @@ namespace xo {
         template < typename B >
         struct bpu_cartesian_product<B, void> {
             using outer_scalefactor_type = std::ratio<1>;
+            static constexpr double c_outer_scalefactor_inexact = 1.0;
+
             using bpu_list_type = bpu_node<B, void>;
 
             static_assert(ratio_concept<outer_scalefactor_type>);
@@ -296,6 +300,8 @@ namespace xo {
             using _rest_type = DI_Rest;
 
             using outer_scalefactor_type = typename _front_mult_type::outer_scalefactor_type;
+            static constexpr double c_outer_scalefactor_inexact = _front_mult_type::c_outer_scalefactor_inexact;
+
             using bpu_list_type = bpu_smart_cons_t<_front_type, DI_Rest>;
 
             static_assert(ratio_concept<outer_scalefactor_type>);
@@ -315,6 +321,8 @@ namespace xo {
             using _rest_type = typename _rest_mult_type::bpu_list_type;
 
             using outer_scalefactor_type = typename _rest_mult_type::outer_scalefactor_type;
+            static constexpr double c_outer_scalefactor_inexact = _rest_mult_type::c_outer_scalefactor_inexact;
+
             using bpu_list_type = bpu_node<DI_Front, _rest_type>;
 
             static_assert(ratio_concept<outer_scalefactor_type>);
@@ -344,6 +352,8 @@ namespace xo {
             using outer_scalefactor_type = std::ratio_multiply<
                 _tmp1_scalefactor_type,
                 _tmp2_scalefactor_type>;
+            static constexpr double c_outer_scalefactor_inexact = (_tmp1_mult_type::c_outer_scalefactor_inexact
+                                                                   * _tmp2_mult_type::c_outer_scalefactor_inexact);
 
             using bpu_list_type = _tmp2_bpu_list_type;
 
@@ -359,11 +369,16 @@ namespace xo {
             using _tmp_mult_type = bpu_cartesian_product<B1, D2>;
 
             using outer_scalefactor_type = _tmp_mult_type::outer_scalefactor_type;
+            static constexpr double c_outer_scalefactor_inexact = _tmp_mult_type::c_outer_scalefactor_inexact;
+
             using bpu_list_type = _tmp_mult_type::bpu_list_type;
         };
 
         // ----- di_invert -----
 
+        /* note: rescaling never required here,
+         *       since not combining basis dimensions.
+         */
         template <typename BpuList>
         struct di_invert;
 
@@ -393,6 +408,8 @@ namespace xo {
                 D2>;
 
             using outer_scalefactor_type = _mult_type::outer_scalefactor_type;
+            static constexpr double c_outer_scalefactor_inexact = _mult_type::c_outer_scalefactor_inexact;
+
             using bpu_list_type = _mult_type::bpu_list_type;
 
             static_assert(ratio_concept<outer_scalefactor_type>);
@@ -404,6 +421,7 @@ namespace xo {
             static_assert(bpu_list_concept<D2>);
 
             using outer_scalefactor_type = std::ratio<1>;
+            static constexpr double c_outer_scalefactor_inexact = 1.0;
             using bpu_list_type = D2;
         };
 
@@ -412,6 +430,7 @@ namespace xo {
             static_assert(bpu_list_concept<D1>);
 
             using outer_scalefactor_type = std::ratio<1>;
+            static constexpr double c_outer_scalefactor_inexact = 1.0;
             using bpu_list_type = D1;
         };
 

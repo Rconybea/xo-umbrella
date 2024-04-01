@@ -82,29 +82,53 @@ namespace xo {
 
         template <typename U1, typename U2>
         struct unit_cartesian_product {
+            /* when a basis dimension (represented by a bpu<..>::c_native_dim)
+             * is present in both {U1, U2},  we need to pick a common unit
+             * (represented by bpu<..>::scalefactor_type).
+             *
+             * scale factors from such conversions are collected in:
+             * 1a. _mult_type::outer_scalefactor_type     (compile-time exact representation using std::ratio)
+             * 1b. _mult_type::outer_scalefactor_inexact  (compile-time constexpr)
+             */
+
             static_assert(unit_concept<U1>);
             static_assert(unit_concept<U2>);
 
+            /* _mult_type -> describes product dimension */
             using _mult_type = di_cartesian_product<
                 typename U1::dim_type,
                 typename U2::dim_type>;
 
+            /* compile-time exact scalefactor for product dimension
+             * (distilled from any forced rescaling)
+             */
             using _mult_sf_type = _mult_type::outer_scalefactor_type;
+            /* bpulist specifying basis factors (possibly to rational powers) in product dimension */
             using _mult_di_type = _mult_type::bpu_list_type;
 
+            /* note: inexact scalefactor doesn't come up here.
+             *       It's not present in unit types,  only appears as byproduct
+             *       of products/ratios of units
+             */
             using _sf1_type = typename std::ratio_multiply<
                 typename U1::scalefactor_type,
                 typename U2::scalefactor_type>::type;
 
             using _sf_type = typename std::ratio_multiply<_mult_sf_type, _sf1_type>::type;
 
-            using type = wrap_unit< _sf_type, _mult_di_type >;
+            /* note: we can compute inexact scale factor,
+             *       but can't make it a template argument
+             */
+            using exact_unit_type = wrap_unit< _sf_type, _mult_di_type >;
 
-            static_assert(unit_concept<type>);
+            static constexpr double c_scalefactor_inexact = _mult_type::c_outer_scalefactor_inexact;
+
+            static_assert(unit_concept<exact_unit_type>);
         };
 
+        /* WARNING: omits inexact scalefactor */
         template <typename U1, typename U2>
-        using unit_cartesian_product_t = unit_cartesian_product<U1, U2>::type;
+        using unit_cartesian_product_t = unit_cartesian_product<U1, U2>::exact_unit_type;
 
         // ----- unit_divide -----
 
@@ -113,11 +137,15 @@ namespace xo {
             static_assert(unit_concept<U1>);
             static_assert(unit_concept<U2>);
 
-            using type = unit_cartesian_product_t<U1, unit_invert_t<U2>>;
+            using _mult_type = unit_cartesian_product<U1, unit_invert_t<U2>>;
+            using exact_unit_type = _mult_type::exact_unit_type;
+
+            static constexpr double c_scalefactor_inexact = _mult_type::c_scalefactor_inexact;
         };
 
+        /* WARNING: omits inexact scalefactor */
         template <typename U1, typename U2>
-        using unit_divide_t = unit_divide<U1, U2>::type;
+        using unit_divide_t = unit_divide<U1, U2>::exact_unit_type;
 
         // ----- same_dimension -----
 
@@ -130,7 +158,7 @@ namespace xo {
             static_assert(unit_concept<U1>);
             static_assert(unit_concept<U2>);
 
-            using _unit_ratio_type = typename unit_cartesian_product<U1, unit_invert_t<U2>>::type;
+            using _unit_ratio_type = typename unit_cartesian_product<U1, unit_invert_t<U2>>::exact_unit_type;
 
             static_assert(std::same_as<typename _unit_ratio_type::dim_type, void>);
 
@@ -147,13 +175,17 @@ namespace xo {
             static_assert(unit_concept<U1>);
             static_assert(unit_concept<U2>);
 
-            using _unit_ratio_type = typename unit_cartesian_product<U1, unit_invert_t<U2>>::type;
+            using _unit_ratio_type = unit_cartesian_product<U1, unit_invert_t<U2>>;
+            using _unit_exact_type = typename _unit_ratio_type::exact_unit_type;
+            using _unit_scalefactor_type = _unit_exact_type::scalefactor_type;
+            static constexpr double c_unit_ratio_inexact = _unit_ratio_type::c_scalefactor_inexact;
 
-            static_assert(std::same_as<typename _unit_ratio_type::scalefactor_type, std::ratio<1>>);
-            static_assert(std::same_as<typename _unit_ratio_type::dim_type, void>);
+            static_assert(std::same_as<_unit_scalefactor_type, std::ratio<1>>);
+            static_assert(std::same_as<typename _unit_exact_type::dim_type, void>);
 
-            static constexpr bool value = (std::same_as<typename _unit_ratio_type::scalefactor_type, std::ratio<1>>
-                                           && std::same_as<typename _unit_ratio_type::dim_type, void>);
+            static constexpr bool value = (std::same_as<_unit_scalefactor_type, std::ratio<1>>
+                                           && (c_unit_ratio_inexact == 1.0)
+                                           && std::same_as<typename _unit_exact_type::dim_type, void>);
         };
 
         template <typename U1, typename U2>
@@ -165,8 +197,9 @@ namespace xo {
         struct unit_conversion_factor {
             static_assert(same_dimension_v<U1, U2>);
 
-            using _unit_ratio_type = typename unit_cartesian_product<U1, unit_invert_t<U2>>::type;
+            using _unit_ratio_type = typename unit_cartesian_product<U1, unit_invert_t<U2>>::exact_unit_type;
             using type = _unit_ratio_type::scalefactor_type;
+            static constexpr double c_scalefactor_inexact = _unit_ratio_type::c_scalefactor_inexact;
         };
 
         /** conversion factor from U1 to U2:
@@ -174,6 +207,8 @@ namespace xo {
          *  with:
          *    x = R::num / R::den
          *    R = unit_conversion_factor_t<U1,U2>
+         *
+         *  WARNING: omits inexact scalefactor unit_conversion_factor<U1,U2>::c_scalefactor_inexact
          **/
         template <typename U1, typename U2>
         using unit_conversion_factor_t = unit_conversion_factor<U1, U2>::type;
@@ -284,7 +319,7 @@ namespace xo {
 
             using hour       = wrap_unit< std::ratio<1>,
                                           bpu_node< bpu<dim::time,
-                                                               std::ratio<3600>> > >;
+                                                        std::ratio<3600>> > >;
 
             template <>
             struct scaled_native_unit_abbrev<dim::time, std::ratio<3600>> {
@@ -293,7 +328,7 @@ namespace xo {
 
             using day       = wrap_unit< std::ratio<1>,
                                          bpu_node< bpu<dim::time,
-                                                              std::ratio<24*3600>> > >;
+                                                       std::ratio<24*3600>> > >;
 
             template <>
             struct scaled_native_unit_abbrev<dim::time, std::ratio<24*3600>> {
