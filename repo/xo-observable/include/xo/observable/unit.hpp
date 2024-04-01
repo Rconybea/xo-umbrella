@@ -47,12 +47,12 @@ namespace xo {
          *
          *  Constructs dimensionless native_bpu if no match
          **/
-        template <typename U, native_dim_id BasisDim>
+        template <typename U, dim BasisDim>
         struct unit_find_bpu {
             using type = di_find_bpu<typename U::dim_type, BasisDim>::type;
         };
 
-        template <typename U, native_dim_id BasisDim>
+        template <typename U, dim BasisDim>
         using unit_find_bpu_t = unit_find_bpu<U, BasisDim>::type;
 
         // ----- unit_abbrev_v -----
@@ -203,114 +203,114 @@ namespace xo {
             // ----- weight -----
 
             using milligram  = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::mass,
+                                          bpu_list< native_bpu<dim::mass,
                                                                std::ratio<1, 1000>> > >;
 
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::mass, std::ratio<1, 1000>> {
+            struct scaled_native_unit_abbrev<dim::mass, std::ratio<1, 1000>> {
                 static constexpr auto value = stringliteral("mg");
             };
 
             using gram       = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::mass,
+                                          bpu_list< native_bpu<dim::mass,
                                                                std::ratio<1>> > >;
             using kilogram   = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::mass,
+                                          bpu_list< native_bpu<dim::mass,
                                                                std::ratio<1000>> > >;
 
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::mass, std::ratio<1000>> {
+            struct scaled_native_unit_abbrev<dim::mass, std::ratio<1000>> {
                 static constexpr auto value = stringliteral("kg");
             };
 
             // ----- distance -----
 
             using millimeter = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::distance,
+                                          bpu_list< native_bpu<dim::distance,
                                                                std::ratio<1,1000>> > >;
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::distance, std::ratio<1,1000>> {
+            struct scaled_native_unit_abbrev<dim::distance, std::ratio<1,1000>> {
                 static constexpr auto value = stringliteral("mm");
             };
 
             using meter      = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::time,
+                                          bpu_list< native_bpu<dim::time,
                                                                std::ratio<1>> > >;
 
             using kilometer  = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::time,
+                                          bpu_list< native_bpu<dim::time,
                                                                std::ratio<1000>> > >;
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::distance, std::ratio<1000>> {
+            struct scaled_native_unit_abbrev<dim::distance, std::ratio<1000>> {
                 static constexpr auto value = stringliteral("km");
             };
 
             // ----- time -----
 
             using nanosecond = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::time,
+                                          bpu_list< native_bpu<dim::time,
                                                                std::ratio<1, 1000000000>> > >;
 
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<1,1000000000>> {
+            struct scaled_native_unit_abbrev<dim::time, std::ratio<1,1000000000>> {
                 static constexpr auto value = stringliteral("ns");
             };
 
             using microsecond = wrap_unit< std::ratio<1>,
-                                           bpu_list< native_bpu<native_dim_id::time,
+                                           bpu_list< native_bpu<dim::time,
                                                                 std::ratio<1, 1000000>> > >;
 
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<1,1000000>> {
+            struct scaled_native_unit_abbrev<dim::time, std::ratio<1,1000000>> {
                 static constexpr auto value = stringliteral("us");
             };
 
-            using millisecond = wrap_unit< std::ratio<1>, bpu_list< native_bpu<native_dim_id::time,
+            using millisecond = wrap_unit< std::ratio<1>, bpu_list< native_bpu<dim::time,
                                                                                std::ratio<1,1000>> > >;
 
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<1,1000>> {
+            struct scaled_native_unit_abbrev<dim::time, std::ratio<1,1000>> {
                 static constexpr auto value = stringliteral("ms");
             };
 
-            using second     = wrap_unit< std::ratio<1>, bpu_list< native_bpu<native_dim_id::time,
+            using second     = wrap_unit< std::ratio<1>, bpu_list< native_bpu<dim::time,
                                                                               std::ratio<1>> > >;
-            using minute     = wrap_unit< std::ratio<1>, bpu_list< native_bpu<native_dim_id::time,
+            using minute     = wrap_unit< std::ratio<1>, bpu_list< native_bpu<dim::time,
                                                                               std::ratio<60>> > >;
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<60>> {
+            struct scaled_native_unit_abbrev<dim::time, std::ratio<60>> {
                 static constexpr auto value = stringliteral("min");
             };
 
             using hour       = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::time,
+                                          bpu_list< native_bpu<dim::time,
                                                                std::ratio<3600>> > >;
 
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<3600>> {
+            struct scaled_native_unit_abbrev<dim::time, std::ratio<3600>> {
                 static constexpr auto value = stringliteral("hr");
             };
 
             using day       = wrap_unit< std::ratio<1>,
-                                         bpu_list< native_bpu<native_dim_id::time,
+                                         bpu_list< native_bpu<dim::time,
                                                               std::ratio<24*3600>> > >;
 
             template <>
-            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<24*3600>> {
+            struct scaled_native_unit_abbrev<dim::time, std::ratio<24*3600>> {
                 static constexpr auto value = stringliteral("dy");
             };
 
             /* this would be volatility in per-root-second units;  probably want something else */
             using volatility = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::time,
+                                          bpu_list< native_bpu<dim::time,
                                                                std::ratio<1>,
                                                                std::ratio<1,2>> > >;
 
             using currency   = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::currency,
+                                          bpu_list< native_bpu<dim::currency,
                                                                std::ratio<1>> > >;
             using price      = wrap_unit< std::ratio<1>,
-                                          bpu_list< native_bpu<native_dim_id::price,
+                                          bpu_list< native_bpu<dim::price,
                                                                std::ratio<1>> > >;
         }
 

@@ -57,33 +57,33 @@ namespace xo {
          *    di_find_bpu<dim::currency> -> t2
          *    di_find_bpu<dim::mass> -> native_bpu {dim::mass, std::ratio<1>, std::ratio<0>}
          **/
-        template <typename BpuList, native_dim_id BasisDim>
+        template <typename BpuList, dim BasisDim>
         struct di_find_bpu;
 
         /**
          *  @brief Aux template helper for di_find_bpu<..>
          **/
-        template <typename Front, typename Rest, native_dim_id BasisDim, bool MatchesFront = (Front::c_native_dim == BasisDim)>
+        template <typename Front, typename Rest, dim BasisDim, bool MatchesFront = (Front::c_native_dim == BasisDim)>
         struct di_find_bpu_aux;
 
         /** specialization for non-empty BpuList **/
-        template <typename BpuList, native_dim_id BasisDim>
+        template <typename BpuList, dim BasisDim>
         struct di_find_bpu {
             using type = di_find_bpu_aux<typename BpuList::front_type, typename BpuList::rest_type, BasisDim>::type;
         };
 
         /** specialization for empty BpuList **/
-        template <native_dim_id BasisDim>
+        template <dim BasisDim>
         struct di_find_bpu<void, BasisDim> {
             using type = native_bpu<BasisDim, std::ratio<1>, std::ratio<0>>;
         };
 
-        template <typename Front, typename Rest, native_dim_id BasisDim>
+        template <typename Front, typename Rest, dim BasisDim>
         struct di_find_bpu_aux<Front, Rest, BasisDim, /*MatchesFront*/ true> {
             using type = Front;
         };
 
-        template <typename Front, typename Rest, native_dim_id BasisDim>
+        template <typename Front, typename Rest, dim BasisDim>
         struct di_find_bpu_aux<Front, Rest, BasisDim, /*MatchesFront*/ false> {
             using type = di_find_bpu<Rest, BasisDim>::type;
         };
@@ -133,10 +133,10 @@ namespace xo {
 
             short for (basis-with-native-power-unit)
          **/
-        template <int index_arg, native_dim_id basis_arg>
+        template <int index_arg, dim basis_arg>
         struct bwp {
             static constexpr int c_index = index_arg;
-            static constexpr native_dim_id c_basis = basis_arg;
+            static constexpr dim c_basis = basis_arg;
         };
 
         template <typename T>
@@ -195,8 +195,8 @@ namespace xo {
             static_assert(bpu_list_concept<D>);
 
             /** For example:
-             *    using b1 = basis_power_unit<native_dim_id::currency, std::ratio<1, 1>>;
-             *    using b2 = basis_power_unit<native_dim_id::time, std::ratio<-1, 2>>;
+             *    using b1 = basis_power_unit<dim::currency, std::ratio<1, 1>>;
+             *    using b2 = basis_power_unit<dim::time, std::ratio<-1, 2>>;
              *    using foo = dimension_impl<b1,dimension_impl<b2>>;
              *
              *  then
@@ -223,7 +223,7 @@ namespace xo {
             using rest_type = void;
 
             /** For example:
-             *    using b1 = basis_power_unit<native_dim_id::time, std::ratio<-1, 2>>;
+             *    using b1 = basis_power_unit<dim::time, std::ratio<-1, 2>>;
              *    using foo = dimension_impl<b1>;
              *  then
              *    foo::lookup_bpu<0> --> b1
@@ -429,7 +429,7 @@ namespace xo {
         /** Expect:
          *  - P isa native_bpu type
          *    - P::power_type = std::ratio<..>
-         *    - P::c_native_dim  :: native_dim_id
+         *    - P::c_native_dim  :: dim
          *    - P::c_num :: int
          *    - P::c_den :: int
          *  - D isa dimension_impl type

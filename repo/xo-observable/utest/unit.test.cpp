@@ -14,7 +14,7 @@ namespace xo {
 
         using xo::reflect::Reflect;
 
-        using xo::obs::native_dim_id;
+        using xo::obs::dim;
         using xo::obs::native_unit_abbrev_v;
         using xo::obs::units::scaled_native_unit_abbrev_v;
         //using xo::obs::native_dim_abbrev;
@@ -71,16 +71,16 @@ namespace xo {
              *       native_dim_abbrev on native_dim_id::foo;  that's the point :)
              */
 
-            REQUIRE(strcmp(scaled_native_unit_abbrev_v<native_dim_id::mass, std::ratio<1>>.value_, "g") == 0);
-            REQUIRE(strcmp(scaled_native_unit_abbrev_v<native_dim_id::time, std::ratio<1>>.value_, "s") == 0);
-            REQUIRE(strcmp(scaled_native_unit_abbrev_v<native_dim_id::currency, std::ratio<1>>.value_, "ccy") == 0);
-            REQUIRE(strcmp(scaled_native_unit_abbrev_v<native_dim_id::price, std::ratio<1>>.value_, "px") == 0);
+            REQUIRE(strcmp(scaled_native_unit_abbrev_v<dim::mass, std::ratio<1>>.value_, "g") == 0);
+            REQUIRE(strcmp(scaled_native_unit_abbrev_v<dim::time, std::ratio<1>>.value_, "s") == 0);
+            REQUIRE(strcmp(scaled_native_unit_abbrev_v<dim::currency, std::ratio<1>>.value_, "ccy") == 0);
+            REQUIRE(strcmp(scaled_native_unit_abbrev_v<dim::price, std::ratio<1>>.value_, "px") == 0);
 
 #ifdef OBSOLETE
-            REQUIRE(strcmp(native_dim_abbrev<native_dim_id::mass>().value_, "") != 0);
-            REQUIRE(strcmp(native_dim_abbrev<native_dim_id::time>().value_, "") != 0);
-            REQUIRE(strcmp(native_dim_abbrev<native_dim_id::currency>().value_, "") != 0);
-            REQUIRE(strcmp(native_dim_abbrev<native_dim_id::price>().value_, "") != 0);
+            REQUIRE(strcmp(native_dim_abbrev<dim::mass>().value_, "") != 0);
+            REQUIRE(strcmp(native_dim_abbrev<dim::time>().value_, "") != 0);
+            REQUIRE(strcmp(native_dim_abbrev<dim::currency>().value_, "") != 0);
+            REQUIRE(strcmp(native_dim_abbrev<dim::price>().value_, "") != 0);
 #endif
 
             static_assert(stringliteral_compare(stringliteral_from_digit(0), stringliteral("0")) == 0);
@@ -161,9 +161,9 @@ namespace xo {
             //log && log(xtag("ratio<2>", stringliteral_from_ratio<std::ratio<2>>().c_str()));
             static_assert(stringliteral_compare(stringliteral_from_ratio<std::ratio<2>>(), stringliteral("2")) == 0);
 
-            static_assert(stringliteral_compare(bpu_assemble_abbrev_helper<native_dim_id::mass, std::ratio<1>, std::ratio<1>>(), stringliteral("g")) == 0);
-            //log && log(xtag("s^(-1/2)", bpu_assemble_abbrev_helper<native_dim_id::time, std::ratio<1>, std::ratio<-1,2>>().c_str()));
-            static_assert(stringliteral_compare(bpu_assemble_abbrev_helper<native_dim_id::time, std::ratio<1>, std::ratio<-1,2>>(), stringliteral("s^-(1/2)")) == 0);
+            static_assert(stringliteral_compare(bpu_assemble_abbrev_helper<dim::mass, std::ratio<1>, std::ratio<1>>(), stringliteral("g")) == 0);
+            //log && log(xtag("s^(-1/2)", bpu_assemble_abbrev_helper<dim::time, std::ratio<1>, std::ratio<-1,2>>().c_str()));
+            static_assert(stringliteral_compare(bpu_assemble_abbrev_helper<dim::time, std::ratio<1>, std::ratio<-1,2>>(), stringliteral("s^-(1/2)")) == 0);
             //stringliteral_compare(stringliteral_from_ratio<std::ratio<2>>(), stringliteral("^2")) == 0);
 #endif
 
@@ -180,15 +180,15 @@ namespace xo {
             scope log(XO_DEBUG2(c_debug_flag, "TEST_CASE.dimension"));
             //log && log("(A)", xtag("foo", foo));
 
-            using t1 = obs::native_bpu<obs::native_dim_id::currency, std::ratio<1,1>>;
+            using t1 = obs::native_bpu<obs::dim::currency, std::ratio<1,1>>;
 
-            static_assert(t1::c_native_dim == obs::native_dim_id::currency);
+            static_assert(t1::c_native_dim == obs::dim::currency);
             static_assert(t1::power_type::num == 1);
             static_assert(t1::power_type::den == 1);
 
-            using t2 = obs::native_bpu<obs::native_dim_id::time, std::ratio<1>, std::ratio<-1,2>>;
+            using t2 = obs::native_bpu<obs::dim::time, std::ratio<1>, std::ratio<-1,2>>;
 
-            static_assert(t2::c_native_dim == obs::native_dim_id::time);
+            static_assert(t2::c_native_dim == obs::dim::time);
             static_assert(t2::power_type::num == -1);
             static_assert(t2::power_type::den == 2);
 
@@ -201,7 +201,7 @@ namespace xo {
 #endif
 
             static_assert(obs::native_lo_bwp_of<d1>::bwp_type::c_index == 0);
-            static_assert(obs::native_lo_bwp_of<d1>::bwp_type::c_basis == obs::native_dim_id::currency);
+            static_assert(obs::native_lo_bwp_of<d1>::bwp_type::c_basis == obs::dim::currency);
 
 
             using dim2 = wrap_unit<std::ratio<1>, bpu_list<t2>>;
@@ -209,7 +209,7 @@ namespace xo {
             REQUIRE(unused_same<d2::front_type, t2>());
             REQUIRE(unused_same<obs::lookup_bpu<d2, 0>::power_unit_type, t2>());
             static_assert(obs::native_lo_bwp_of<d2>::bwp_type::c_index == 0);
-            static_assert(obs::native_lo_bwp_of<d2>::bwp_type::c_basis == obs::native_dim_id::time);
+            static_assert(obs::native_lo_bwp_of<d2>::bwp_type::c_basis == obs::dim::time);
 
             using dim3 = wrap_unit<std::ratio<1>, bpu_list<t1, bpu_list<t2>>>;
             using d3 = dim3::dim_type; /* ccy.t^(-1/2) */
