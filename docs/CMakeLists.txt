@@ -39,15 +39,15 @@ else()
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         MAIN_DEPENDENCY ${DOX_CONFIG_FILE}
         COMMENT "Generating docs (doxygen)")
-endif()
 
-# To build this target
-#   $ cmake --build .build -j -- doxygen
-# or
-#   $ cd .build
-#   $ make doxygen
-#
-add_custom_target(
-    xo_observable_dox
-    DEPENDS ${DOX_INDEX_FILE}
-)
+    # To build this target
+    #   $ cmake --build .build -j -- doxygen
+    # or
+    #   $ cd .build
+    #   $ make doxygen
+    #
+    add_custom_target(
+        doxygen
+        DEPENDS ${DOX_INDEX_FILE}
+    )
+endif()

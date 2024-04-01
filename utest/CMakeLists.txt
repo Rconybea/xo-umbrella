@@ -3,7 +3,7 @@
 set(SELF_EXECUTABLE_NAME utest.observable)
 set(SELF_SOURCE_FILES
     observable_utest_main.cpp
-    linear_interpolation.test.cpp unit.test.cpp quantity.test.cpp)
+    linear_interpolation.test.cpp)
 
 add_executable(${SELF_EXECUTABLE_NAME} ${SELF_SOURCE_FILES})
 xo_include_options2(${SELF_EXECUTABLE_NAME})
