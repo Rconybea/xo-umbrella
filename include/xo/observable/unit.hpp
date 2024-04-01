@@ -202,6 +202,26 @@ namespace xo {
                 static constexpr auto value = stringliteral("km");
             };
 
+            // ----- time -----
+
+            using nanosecond = wrap_unit< std::ratio<1>,
+                                          bpu_list< native_bpu<native_dim_id::time,
+                                                               std::ratio<1, 1000000000>> > >;
+
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<1,1000000000>> {
+                static constexpr auto value = stringliteral("ns");
+            };
+
+            using microsecond = wrap_unit< std::ratio<1>,
+                                           bpu_list< native_bpu<native_dim_id::time,
+                                                                std::ratio<1, 1000000>> > >;
+
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<1,1000000>> {
+                static constexpr auto value = stringliteral("us");
+            };
+
             using millisecond = wrap_unit< std::ratio<1>, bpu_list< native_bpu<native_dim_id::time,
                                                                                std::ratio<1,1000>> > >;
 
@@ -226,6 +246,15 @@ namespace xo {
             template <>
             struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<3600>> {
                 static constexpr auto value = stringliteral("hr");
+            };
+
+            using day       = wrap_unit< std::ratio<1>,
+                                         bpu_list< native_bpu<native_dim_id::time,
+                                                              std::ratio<24*3600>> > >;
+
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::time, std::ratio<24*3600>> {
+                static constexpr auto value = stringliteral("dy");
             };
 
             /* this would be volatility in per-root-second units;  probably want something else */
