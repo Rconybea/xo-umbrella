@@ -15,11 +15,14 @@ namespace xo {
     using xo::obs::qty::seconds;
     using xo::obs::qty::minutes;
 
+    using xo::obs::unit_find_bpu_t;
     using xo::obs::unit_conversion_factor_t;
     using xo::obs::unit_cartesian_product_t;
     using xo::obs::unit_invert_t;
     using xo::obs::unit_abbrev_v;
     using xo::obs::same_dimension_v;
+    using xo::obs::native_dim_id;
+
     using xo::obs::from_ratio;
     using xo::obs::stringliteral_from_ratio;
     using xo::obs::ratio2str_aux;
@@ -46,6 +49,9 @@ namespace xo {
             quantity<units::second, int64_t> t = seconds(1L);
 
             REQUIRE(t.scale() == 1);
+
+            static_assert(t.basis_power<native_dim_id::time> == 1);
+            static_assert(t.basis_power<native_dim_id::mass> == 0);
         } /*TEST_CASE(quantity)*/
 
         TEST_CASE("add1", "[quantity]") {
@@ -61,6 +67,8 @@ namespace xo {
             log && log(xtag("sum.unit", sum.unit_cstr()));
 
             static_assert(std::same_as<decltype(sum)::unit_type, units::second>);
+            static_assert(t1.basis_power<native_dim_id::time> == 1);
+            static_assert(t2.basis_power<native_dim_id::time> == 1);
 
             REQUIRE(sum.scale() == 3);
 
@@ -74,6 +82,8 @@ namespace xo {
             quantity<units::second, int64_t> t1 = seconds(1);
             auto m2 = minutes(2);
 
+            static_assert(m2.basis_power<native_dim_id::time> == 1);
+
             log && log(xtag("m2.scale", m2.scale()), xtag("m2.unit", m2.unit_cstr()));
 
             log && log(xtag("m2_sec", m2.in_units_of<units::second, int64_t>()));
@@ -83,6 +93,8 @@ namespace xo {
             log && log(xtag("t1.unit", t1.unit_cstr()), xtag("t2.unit", t2.unit_cstr()));
 
             auto sum = t1 + t2;
+
+            static_assert(m2.basis_power<native_dim_id::time> == 1);
 
             log && log(xtag("sum.unit", sum.unit_cstr()));
 
@@ -99,6 +111,7 @@ namespace xo {
             /* sum will take unit from lhs argument to + */
             auto sum = t1 + t2;
 
+            static_assert(sum.basis_power<native_dim_id::time> == 1);
             static_assert(std::same_as<decltype(sum)::unit_type, units::second>);
 
             REQUIRE(sum.scale() == 121);
@@ -111,6 +124,11 @@ namespace xo {
 
             using u_kgps = unit_cartesian_product_t<units::kilogram, unit_invert_t<units::second>>;
             using u_gpm = unit_cartesian_product_t<units::gram, unit_invert_t<units::minute>>;
+
+            static_assert(std::same_as<unit_find_bpu_t<u_kgps, native_dim_id::mass>::power_type, std::ratio<1>>);
+            static_assert(std::same_as<unit_find_bpu_t<u_kgps, native_dim_id::time>::power_type, std::ratio<-1>>);
+            static_assert(std::same_as<unit_find_bpu_t<u_gpm, native_dim_id::mass>::power_type, std::ratio<1>>);
+            static_assert(std::same_as<unit_find_bpu_t<u_gpm, native_dim_id::time>::power_type, std::ratio<-1>>);
 
             log && log(xtag("u_kgps", unit_abbrev_v<u_kgps>.c_str()));
             log && log(xtag("u_gpm", unit_abbrev_v<u_gpm>.c_str()));
@@ -128,6 +146,11 @@ namespace xo {
             auto q2 = quantity<u_gpm, double>();
 
             q2 = q1;
+
+            static_assert(q1.basis_power<native_dim_id::mass> == 1);
+            static_assert(q1.basis_power<native_dim_id::time> == -1);
+            static_assert(q2.basis_power<native_dim_id::mass> == 1);
+            static_assert(q2.basis_power<native_dim_id::time> == -1);
 
             log && log(xtag("q1", q1), xtag("q2", q2));
         } /*TEST_CASE(add4)*/
@@ -151,6 +174,8 @@ namespace xo {
             {
                 auto r = q0 * q1;
 
+                static_assert(r.basis_power<native_dim_id::time> == 2);
+
                 /* taking unit from LHS */
                 REQUIRE(strcmp(r.unit_cstr(), "ms^2") == 0);
 
@@ -161,6 +186,8 @@ namespace xo {
 
             {
                 auto r = q1 * q2;
+
+                static_assert(r.basis_power<native_dim_id::time> == 2);
 
                 /* taking unit from LHS */
                 REQUIRE(strcmp(r.unit_cstr(), "s^2") == 0);
@@ -173,6 +200,8 @@ namespace xo {
             {
                 auto r = q2 * q1;
 
+                static_assert(r.basis_power<native_dim_id::time> == 2);
+
                 /* taking unit from LHS */
                 REQUIRE(strcmp(r.unit_cstr(), "min^2") == 0);
 
@@ -183,6 +212,8 @@ namespace xo {
 
             {
                 auto r = q2 * 60;
+
+                static_assert(r.basis_power<native_dim_id::time> == 1);
 
                 log && log(xtag("q2*60", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
@@ -196,6 +227,8 @@ namespace xo {
 
             {
                 auto r = q2 * 60U;
+
+                static_assert(r.basis_power<native_dim_id::time> == 1);
 
                 log && log(xtag("q2*60U", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
@@ -212,6 +245,8 @@ namespace xo {
 
                 auto r = (q2 * 60.5);
 
+                static_assert(r.basis_power<native_dim_id::time> == 1);
+
                 //log && log(xtag("r=q2*60.5", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
 
@@ -226,6 +261,8 @@ namespace xo {
                 log && log(xtag("q2*60.5f", q2*60.5f));
 
                 auto r = (q2 * 60.5f);
+
+                static_assert(r.basis_power<native_dim_id::time> == 1);
 
                 //log && log(xtag("r=q2*60.5f", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
@@ -243,6 +280,7 @@ namespace xo {
                 log && log(xtag("60*q2", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
 
+                static_assert(r.basis_power<native_dim_id::time> == 1);
                 static_assert(std::same_as<decltype(r)::repr_type, int>);
 
                 /* preserve units of existing quantity */
@@ -258,6 +296,7 @@ namespace xo {
                 //log && log(xtag("60.0*q2", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
 
+                static_assert(r.basis_power<native_dim_id::time> == 1);
                 static_assert(std::same_as<decltype(r)::repr_type, double>);
 
                 /* preserve units of existing quantity */
@@ -273,6 +312,7 @@ namespace xo {
                 //log && log(xtag("60.0*q2", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
 
+                static_assert(r.basis_power<native_dim_id::time> == 1);
                 static_assert(std::same_as<decltype(r)::repr_type, float>);
 
                 /* preserve units of existing quantity */
@@ -370,6 +410,8 @@ namespace xo {
                 log && log(xtag("q0", q0), xtag("q1", q1), xtag("q0/(q1*q1)", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
 
+                static_assert(r.basis_power<native_dim_id::time> == -1);
+
                 REQUIRE(r.scale() == 0.0125);
             }
 
@@ -378,6 +420,8 @@ namespace xo {
 
                 log && log(xtag("q0", q0), xtag("q1", q1), xtag("(q0*q0)/q1", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
+
+                static_assert(r.basis_power<native_dim_id::time> == 1);
 
                 REQUIRE(r.scale() == 1.25);
             }
@@ -423,6 +467,8 @@ namespace xo {
                 log && log(xtag("q0", q0), xtag("q1", q1), xtag("q0/(q1*q1)", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
 
+                static_assert(r.basis_power<native_dim_id::time> == -1);
+
                 REQUIRE(r.scale() == 0.0125);
             }
 
@@ -431,6 +477,8 @@ namespace xo {
 
                 log && log(xtag("q0", q0), xtag("q1", q1), xtag("(q0*q0)/q1", r));
                 log && log(xtag("r.type", Reflect::require<decltype(r)>()->canonical_name()));
+
+                static_assert(r.basis_power<native_dim_id::time> == 1);
 
                 REQUIRE(r.scale() == 1.25);
             }
