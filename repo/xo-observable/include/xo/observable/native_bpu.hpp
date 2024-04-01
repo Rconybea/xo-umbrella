@@ -11,7 +11,6 @@
 namespace xo {
     namespace obs {
         /* TODO:
-         * - native_unit -> basis_unit
          * - native_bpu -> bpu
          */
 
@@ -22,11 +21,11 @@ namespace xo {
         template <dim DimId,
                   native_unit_id NativeUnitId = native_unit_for_v<DimId>,
                   typename InnerScale = std::ratio<1>>
-        struct native_unit {
+        struct basis_unit {
             static_assert(ratio_concept<InnerScale>);
 
             static constexpr dim c_native_dim = DimId;
-            static constexpr native_unit c_native_unit = NativeUnitId;
+            static constexpr basis_unit c_native_unit = NativeUnitId;
 
             using inner_scalefactor_type = InnerScale;
         };
@@ -104,7 +103,7 @@ namespace xo {
             dim DimId,
             typename InnerScale,
             typename Power = std::ratio<1> >
-        struct native_bpu : native_unit<DimId, native_unit_for_v<DimId>, InnerScale> {
+        struct native_bpu : basis_unit<DimId, native_unit_for_v<DimId>, InnerScale> {
             static_assert(ratio_concept<Power>);
 
             /* native_unit provides
