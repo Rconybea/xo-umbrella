@@ -153,6 +153,7 @@ namespace xo {
                 return ((this->scale_ * _convert_to_u2_type::scalefactor_type::num) / _convert_to_u2_type::scalefactor_type::den);
             }
 
+            template <typename Quantity2>
             quantity operator+=(Quantity2 y) {
                 static_assert(std::same_as<
                               typename unit_type::canon_type,
