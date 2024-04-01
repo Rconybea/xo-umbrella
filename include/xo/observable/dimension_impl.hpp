@@ -178,68 +178,6 @@ namespace xo {
             static constexpr std::uint32_t n_dimension = 1;
         };
 
-#ifdef OBSOLETE
-        // ----- bpu_normalize -----
-
-        template <typename BpuList>
-        struct bpu_normalize;
-
-        template <typename Front, typename Rest>
-        struct bpu_normalize_helper;
-
-        template <typename Front>
-        struct bpu_normalize_helper<Front, void>
-        {
-            static_assert(native_bpu_concept<Front>);
-
-            using _norm_front_type = native_bpu<Front::c_native_dim,
-                                                typename Front::inner_scalefactor_type,
-                                                typename Front::power_type>;
-
-            //using scalefactor_type = typename Front::outer_scalefactor_type;
-            using norm_type = bpu_list<_norm_front_type, void>;
-        };
-
-        template <typename Front, typename Rest>
-        struct bpu_normalize_helper
-        {
-            static_assert(native_bpu_concept<Front>);
-            //static_assert(bpulist_concept<Rest>);
-
-            using _norm_front_type = native_bpu<
-                Front::c_native_dim,
-                typename Front::inner_scalefactor_type,
-                typename Front::power_type>;
-
-            using _norm_rest_type = bpu_normalize<Rest>;
-
-            //using scalefactor_type = std::ratio_multiply<
-            //    typename Front::outer_scalefactor_type,
-            //    typename _norm_rest_type::scalefactor_type>;
-
-            using norm_type = bpu_list<
-                _norm_front_type,
-                typename _norm_rest_type::norm_type
-                >;
-        };
-
-        template <>
-        struct bpu_normalize<void> {
-            using norm_type = void;
-            //using scalefactor_type = std::ratio<1>;
-        };
-
-        template <typename BpuList>
-        struct bpu_normalize {
-            using _helper_type = bpu_normalize_helper<
-                typename BpuList::front_type,
-                typename BpuList::rest_type >;
-
-            using norm_type = typename _helper_type::norm_type;
-            //using scalefactor_type = typename _helper_type::scalefactor_type;
-        };
-#endif
-
         // ----- bpu_cartesian_product -----
 
         /** Require:
