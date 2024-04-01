@@ -26,7 +26,7 @@ namespace xo {
          *  - Repr * Repr -> Repr
          *  - Repr / Repr -> Repr
          **/
-        template <typename Unit, typename Repr, typename RequiredDimensionType = Unit>
+        template <typename Unit, typename Repr> //, typename RequiredDimensionType = Unit>
         class quantity {
         public:
             using unit_type = Unit;
