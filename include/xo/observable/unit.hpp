@@ -203,7 +203,7 @@ namespace xo {
             // ----- weight -----
 
             using milligram  = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::mass,
+                                          bpu_node< bpu<dim::mass,
                                                                std::ratio<1, 1000>> > >;
 
             template <>
@@ -212,10 +212,10 @@ namespace xo {
             };
 
             using gram       = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::mass,
+                                          bpu_node< bpu<dim::mass,
                                                                std::ratio<1>> > >;
             using kilogram   = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::mass,
+                                          bpu_node< bpu<dim::mass,
                                                                std::ratio<1000>> > >;
 
             template <>
@@ -226,7 +226,7 @@ namespace xo {
             // ----- distance -----
 
             using millimeter = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::distance,
+                                          bpu_node< bpu<dim::distance,
                                                                std::ratio<1,1000>> > >;
             template <>
             struct scaled_native_unit_abbrev<dim::distance, std::ratio<1,1000>> {
@@ -234,11 +234,11 @@ namespace xo {
             };
 
             using meter      = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::time,
+                                          bpu_node< bpu<dim::time,
                                                                std::ratio<1>> > >;
 
             using kilometer  = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::time,
+                                          bpu_node< bpu<dim::time,
                                                                std::ratio<1000>> > >;
             template <>
             struct scaled_native_unit_abbrev<dim::distance, std::ratio<1000>> {
@@ -248,7 +248,7 @@ namespace xo {
             // ----- time -----
 
             using nanosecond = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::time,
+                                          bpu_node< bpu<dim::time,
                                                                std::ratio<1, 1000000000>> > >;
 
             template <>
@@ -257,7 +257,7 @@ namespace xo {
             };
 
             using microsecond = wrap_unit< std::ratio<1>,
-                                           bpu_list< bpu<dim::time,
+                                           bpu_node< bpu<dim::time,
                                                                 std::ratio<1, 1000000>> > >;
 
             template <>
@@ -265,7 +265,7 @@ namespace xo {
                 static constexpr auto value = stringliteral("us");
             };
 
-            using millisecond = wrap_unit< std::ratio<1>, bpu_list< bpu<dim::time,
+            using millisecond = wrap_unit< std::ratio<1>, bpu_node< bpu<dim::time,
                                                                                std::ratio<1,1000>> > >;
 
             template <>
@@ -273,9 +273,9 @@ namespace xo {
                 static constexpr auto value = stringliteral("ms");
             };
 
-            using second     = wrap_unit< std::ratio<1>, bpu_list< bpu<dim::time,
+            using second     = wrap_unit< std::ratio<1>, bpu_node< bpu<dim::time,
                                                                               std::ratio<1>> > >;
-            using minute     = wrap_unit< std::ratio<1>, bpu_list< bpu<dim::time,
+            using minute     = wrap_unit< std::ratio<1>, bpu_node< bpu<dim::time,
                                                                               std::ratio<60>> > >;
             template <>
             struct scaled_native_unit_abbrev<dim::time, std::ratio<60>> {
@@ -283,7 +283,7 @@ namespace xo {
             };
 
             using hour       = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::time,
+                                          bpu_node< bpu<dim::time,
                                                                std::ratio<3600>> > >;
 
             template <>
@@ -292,7 +292,7 @@ namespace xo {
             };
 
             using day       = wrap_unit< std::ratio<1>,
-                                         bpu_list< bpu<dim::time,
+                                         bpu_node< bpu<dim::time,
                                                               std::ratio<24*3600>> > >;
 
             template <>
@@ -302,15 +302,15 @@ namespace xo {
 
             /* this would be volatility in per-root-second units;  probably want something else */
             using volatility = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::time,
+                                          bpu_node< bpu<dim::time,
                                                                std::ratio<1>,
                                                                std::ratio<1,2>> > >;
 
             using currency   = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::currency,
+                                          bpu_node< bpu<dim::currency,
                                                                std::ratio<1>> > >;
             using price      = wrap_unit< std::ratio<1>,
-                                          bpu_list< bpu<dim::price,
+                                          bpu_node< bpu<dim::price,
                                                                std::ratio<1>> > >;
         }
 
