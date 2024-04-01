@@ -188,9 +188,7 @@ namespace xo {
          *              = a'.(b1.u)
          **/
         template < typename B1, typename B2 >
-        struct bpu_inner_multiply {
-            // TODO: rename -> bpu_cartesian_product ?
-
+        struct bpu_product {
             static_assert(native_bpu_concept<B1>);
             static_assert(native_bpu_concept<B2>);
             static_assert(B1::c_native_dim == B2::c_native_dim);
