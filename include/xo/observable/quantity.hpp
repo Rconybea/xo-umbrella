@@ -185,6 +185,13 @@ namespace xo {
         }
 
         namespace qty {
+            // ----- mass -----
+
+            template <typename Repr = double>
+            inline auto milligrams(Repr x) -> quantity<units::milligram, Repr> {
+                return quantity<units::milligram, Repr>::promote(x);
+            };
+
             template <typename Repr = double>
             inline auto grams(Repr x) -> quantity<units::gram, Repr> {
                 return quantity<units::gram, Repr>::promote(x);
