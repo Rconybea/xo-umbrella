@@ -29,7 +29,7 @@ namespace xo {
         using xo::obs::bpu_assemble_abbrev_helper;
         using xo::obs::bpu_assemble_abbrev;
 #endif
-        using xo::obs::bpu_list;
+        using xo::obs::bpu_node;
         using xo::obs::wrap_unit;
         using xo::obs::unit_abbrev_v;
         //using xo::obs::dim_abbrev_v;
@@ -192,7 +192,7 @@ namespace xo {
             static_assert(t2::power_type::num == -1);
             static_assert(t2::power_type::den == 2);
 
-            using dim1 = wrap_unit<std::ratio<1>, bpu_list<t1>>;
+            using dim1 = wrap_unit<std::ratio<1>, bpu_node<t1>>;
             using d1 = dim1::dim_type; /* ccy */
             REQUIRE(unused_same<d1::front_type, t1>());
             REQUIRE(unused_same<obs::lookup_bpu<d1, 0>::power_unit_type, t1>());
@@ -204,14 +204,14 @@ namespace xo {
             static_assert(obs::native_lo_bwp_of<d1>::bwp_type::c_basis == obs::dim::currency);
 
 
-            using dim2 = wrap_unit<std::ratio<1>, bpu_list<t2>>;
+            using dim2 = wrap_unit<std::ratio<1>, bpu_node<t2>>;
             using d2 = dim2::dim_type; /* t^(-1/2) */
             REQUIRE(unused_same<d2::front_type, t2>());
             REQUIRE(unused_same<obs::lookup_bpu<d2, 0>::power_unit_type, t2>());
             static_assert(obs::native_lo_bwp_of<d2>::bwp_type::c_index == 0);
             static_assert(obs::native_lo_bwp_of<d2>::bwp_type::c_basis == obs::dim::time);
 
-            using dim3 = wrap_unit<std::ratio<1>, bpu_list<t1, bpu_list<t2>>>;
+            using dim3 = wrap_unit<std::ratio<1>, bpu_node<t1, bpu_node<t2>>>;
             using d3 = dim3::dim_type; /* ccy.t^(-1/2) */
             REQUIRE(unused_same<obs::lookup_bpu<d3, 0>::power_unit_type, t1>());
 
@@ -236,7 +236,7 @@ namespace xo {
 
 
             using d3b = wrap_unit<std::ratio<1>,
-                                  bpu_list<t2, bpu_list<t1>>>::dim_type; /* t^(-1/2).ccy */
+                                  bpu_node<t2, bpu_node<t1>>>::dim_type; /* t^(-1/2).ccy */
             //using d3b = obs::dimension_impl<t2, obs::dimension_impl<t1>>; /* t^(-1/2).ccy */
             REQUIRE(unused_same<obs::lookup_bpu<d3b, 0>::power_unit_type, t2>());
             REQUIRE(unused_same<obs::lookup_bpu<d3b, 1>::power_unit_type, t1>());

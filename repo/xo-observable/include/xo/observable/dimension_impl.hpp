@@ -97,7 +97,7 @@ namespace xo {
          *  - bpu_node_concept<bpulist<P,D>>
          **/
         template <typename P, typename D = void>
-        struct bpu_list;
+        struct bpu_node;
 
         // ----------------------------------------------------------------
 
@@ -119,7 +119,7 @@ namespace xo {
         template <typename Front,
                   typename Rest>
         struct bpu_smart_cons<Front, Rest, /*FrontHasZeroPower*/ false> {
-            using type = bpu_list<Front, Rest>;
+            using type = bpu_node<Front, Rest>;
         };
 
         template <typename Front, typename Rest>
@@ -162,7 +162,7 @@ namespace xo {
         };
 
         template <typename P0>
-        struct native_lo_bwp_of<bpu_list<P0>> {
+        struct native_lo_bwp_of<bpu_node<P0>> {
             using bwp_type = bwp<0, P0::c_native_dim>;
         };
 
@@ -172,7 +172,7 @@ namespace xo {
         struct without_elt {
             using _without_rest_type = typename without_elt<typename Dim::rest_type, Index - 1>::dim_type;
 
-            using dim_type = bpu_list< typename Dim::front_type, _without_rest_type >;
+            using dim_type = bpu_node< typename Dim::front_type, _without_rest_type >;
         };
 
         template <typename Dim>
@@ -190,7 +190,7 @@ namespace xo {
          *  - D satisfies bpu_list_concept
          **/
         template <typename P, typename D>
-        struct bpu_list {
+        struct bpu_node {
             static_assert(native_bpu_concept<P>);
             static_assert(bpu_list_concept<D>);
 
@@ -215,7 +215,7 @@ namespace xo {
             @brief represent a composite dimension
         **/
         template <typename P0>
-        struct bpu_list<P0, void> {
+        struct bpu_node<P0, void> {
             static_assert(native_bpu_concept<P0>);
             static_assert(bpu_list_concept<void>);
 
@@ -274,7 +274,7 @@ namespace xo {
         template < typename B >
         struct bpu_cartesian_product<B, void> {
             using outer_scalefactor_type = std::ratio<1>;
-            using bpu_list_type = bpu_list<B, void>;
+            using bpu_list_type = bpu_node<B, void>;
 
             static_assert(ratio_concept<outer_scalefactor_type>);
             static_assert(bpu_list_concept<bpu_list_type>);
@@ -315,7 +315,7 @@ namespace xo {
             using _rest_type = typename _rest_mult_type::bpu_list_type;
 
             using outer_scalefactor_type = typename _rest_mult_type::outer_scalefactor_type;
-            using bpu_list_type = bpu_list<DI_Front, _rest_type>;
+            using bpu_list_type = bpu_node<DI_Front, _rest_type>;
 
             static_assert(ratio_concept<outer_scalefactor_type>);
             static_assert(bpu_list_concept<bpu_list_type>);
@@ -379,7 +379,7 @@ namespace xo {
 
         template <typename BpuList>
         struct di_invert {
-            using type = bpu_list<
+            using type = bpu_node<
                 typename bpu_invert<typename BpuList::front_type>::type,
                 typename di_invert<typename BpuList::rest_type>::type
                 >;
@@ -483,7 +483,7 @@ namespace xo {
             using _rest0_type = typename without_elt<D, _bwp_front::c_index>::dim_type;
             using _rest_type = canonical_impl<_rest0_type>::dim_type;
 
-            using dim_type = bpu_list<_front_type, _rest_type>;
+            using dim_type = bpu_node<_front_type, _rest_type>;
         };
 
         /** compute canonical renumbering of a dimension
