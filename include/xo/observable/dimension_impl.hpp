@@ -321,11 +321,6 @@ namespace xo {
             static_assert(bpu_list_concept<bpu_list_type>);
         };
 
-#ifdef OBSOLETE
-        template < typename B, typename DI >
-        using bpu_cartesian_product_t = bpu_cartesian_product<B, DI>::type;
-#endif
-
         // ----- di_cartesian_product -----
 
         template < typename D1, typename D2 > struct di_cartesian_product;
