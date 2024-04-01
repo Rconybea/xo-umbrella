@@ -195,6 +195,23 @@ namespace xo {
                 return quantity<units::kilogram, Repr>::promote(x);
             };
 
+            // ----- distance -----
+
+            template <typename Repr = double>
+            inline auto millimeters(Repr x) -> quantity<units::millimeter, Repr> {
+                return quantity<units::millimeter, Repr>::promote(x);
+            }
+
+            template <typename Repr = double>
+            inline auto meters(Repr x) -> quantity<units::meter, Repr> {
+                return quantity<units::meter, Repr>::promote(x);
+            }
+
+            template <typename Repr = double>
+            inline auto kilometers(Repr x) -> quantity<units::kilometer, Repr> {
+                return quantity<units::kilometer, Repr>::promote(x);
+            }
+
             // ----- time -----
 
             template <typename Repr = double>
