@@ -340,6 +340,24 @@ namespace xo {
                                           bpu_node< bpu<dim::time,
                                                                std::ratio<1>,
                                                                std::ratio<1,2>> > >;
+            using month     = wrap_unit< std::ratio<1>,
+                                         bpu_node< bpu<dim::time,
+                                                       std::ratio<30*24*3600>> > >;
+
+            template <>
+            struct scaled_native_unit_abbrev<dim::time, std::ratio<30*24*3600>> {
+                static constexpr auto value = stringliteral("mo");
+            };
+
+            using yr250     = wrap_unit< std::ratio<1>,
+                                         bpu_node< bpu<dim::time,
+                                                       std::ratio<250*24*3600>> > >;
+
+            template <>
+            struct scaled_native_unit_abbrev<dim::time, std::ratio<250*24*3600>> {
+                static constexpr auto value = stringliteral("yr250");
+            };
+
 
             using currency   = wrap_unit< std::ratio<1>,
                                           bpu_node< bpu<dim::currency,
