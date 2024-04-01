@@ -50,6 +50,19 @@ namespace xo {
             constexpr quantity(quantity const & x) = default;
             constexpr quantity(quantity && x) = default;
 
+            template <native_dim_id BasisDim>
+            using find_bpu_t = unit_find_bpu_t<unit_type, BasisDim>;
+
+            /**
+             *  For example:
+             *    auto q = qty::milliseconds(5) * qty::seconds(1);
+             *  then
+             *    q.basis_power<dim::time> -> 2
+             *    q.basis_power<dim::mass> -> 0
+             **/
+            template <native_dim_id BasisDim, typename PowerRepr = int>
+            static constexpr PowerRepr basis_power = from_ratio<PowerRepr, typename find_bpu_t<BasisDim>::power_type>();
+
             /** @brief get scale value (relative to unit) (@ref scale_) **/
             constexpr Repr scale() const { return scale_; }
             /** @brief abbreviation for this quantity's units **/
