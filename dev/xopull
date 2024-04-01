@@ -29,3 +29,4 @@ git subtree pull --prefix repo/xo-pydistribution https://github.com/rconybea/xo-
 git subtree pull --prefix repo/xo-optionutil https://github.com/rconybea/xo-optionutil.git main
 
 git subtree pull --prefix repo/xo-observable https://github.com/rconybea/xo-observable.git main
+git subtree pull --prefix repo/xo-unit https://github.com/rconybea/xo-unit.git main
