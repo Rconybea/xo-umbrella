@@ -335,11 +335,6 @@ namespace xo {
                 static constexpr auto value = stringliteral("dy");
             };
 
-            /* this would be volatility in per-root-second units;  probably want something else */
-            using volatility = wrap_unit< std::ratio<1>,
-                                          bpu_node< bpu<dim::time,
-                                                               std::ratio<1>,
-                                                               std::ratio<1,2>> > >;
             using month     = wrap_unit< std::ratio<1>,
                                          bpu_node< bpu<dim::time,
                                                        std::ratio<30*24*3600>> > >;
@@ -358,6 +353,31 @@ namespace xo {
                 static constexpr auto value = stringliteral("yr250");
             };
 
+            // ------ volatility ------
+
+            /* volatility   in units of 1/sqrt(1day)
+             * volatility^2 in units of 1/day
+             */
+            using volatility_1d = wrap_unit< std::ratio<1>,
+                                             bpu_node< bpu<dim::time,
+                                                           std::ratio<24*3600>,
+                                                           std::ratio<-1,2>> > >;
+
+            /* volatility   in units of 1/sqrt(30day)
+             * volatility^2 in units of 1/(30day)
+             */
+            using volatility_30d = wrap_unit< std::ratio<1>,
+                                              bpu_node< bpu<dim::time,
+                                                            std::ratio<30*24*3600>,
+                                                            std::ratio<-1,2>> > >;
+
+            /* volatility   in units of 1/sqrt(250day)
+             * volatility^2 in units of 1/(250day)
+             */
+            using volatility_250d = wrap_unit< std::ratio<1>,
+                                               bpu_node< bpu<dim::time,
+                                                             std::ratio<250*24*3600>,
+                                                             std::ratio<-1,2>> > >;
 
             using currency   = wrap_unit< std::ratio<1>,
                                           bpu_node< bpu<dim::currency,
