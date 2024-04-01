@@ -36,6 +36,11 @@ namespace xo {
         template <typename Unit>
         using normalize_unit_t = normalize_unit<Unit>::type;
 
+        // ----- dimensionless_v -----
+
+        template <typename Unit>
+        constexpr auto dimensionless_v = std::same_as<typename Unit::dim_type, void>;
+
         // ----- unit_abbrev_v -----
 
         /** @brief canonical stringliteral abbreviation for dimension D. **/
