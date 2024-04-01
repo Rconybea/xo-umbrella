@@ -19,14 +19,14 @@ namespace xo {
          *
          *  @brief A dimensionless multiple with natively-specified (i.e. at compile-time) dimension
          **/
-        template <native_dim_id DimId,
+        template <dim DimId,
                   native_unit_id NativeUnitId = native_unit_for_v<DimId>,
                   typename InnerScale = std::ratio<1>>
         struct native_unit {
             static_assert(ratio_concept<InnerScale>);
 
-            static constexpr native_dim_id c_native_dim = DimId;
-            static constexpr native_unit_id c_native_unit = NativeUnitId;
+            static constexpr dim c_native_dim = DimId;
+            static constexpr native_unit c_native_unit = NativeUnitId;
 
             using inner_scalefactor_type = InnerScale;
         };
@@ -34,51 +34,51 @@ namespace xo {
         /** Using struct wrapper so we can partially specialize
          *  Specializations in [dimension.hpp], see also
          **/
-        template <native_dim_id dim_id>
+        template <dim dim_id>
         struct native_unit_abbrev_helper;
 
 
         template <>
-        struct native_unit_abbrev_helper<native_dim_id::mass> {
+        struct native_unit_abbrev_helper<dim::mass> {
             static constexpr auto value = stringliteral("g");
         };
 
         template <>
-        struct native_unit_abbrev_helper<native_dim_id::distance> {
+        struct native_unit_abbrev_helper<dim::distance> {
             static constexpr auto value = stringliteral("m");
         };
 
         template <>
-        struct native_unit_abbrev_helper<native_dim_id::time> {
+        struct native_unit_abbrev_helper<dim::time> {
             static constexpr auto value = stringliteral("s");
         };
 
         template<>
-        struct native_unit_abbrev_helper<native_dim_id::currency> {
+        struct native_unit_abbrev_helper<dim::currency> {
             static constexpr auto value = stringliteral("ccy");
         };
 
         template<>
-        struct native_unit_abbrev_helper<native_dim_id::price> {
+        struct native_unit_abbrev_helper<dim::price> {
             static constexpr auto value = stringliteral("px");
         };
 
-        template<native_dim_id DimId>
+        template<dim DimId>
         constexpr auto native_unit_abbrev_v = native_unit_abbrev_helper<DimId>::value;
 
         // ----- scaled_native_unit_abbrev_helper -----
 
         namespace units {
             /* Require: InnerScale is ratio type; InnerScale >= 1 */
-            template <native_dim_id DimId, typename InnerScale>
+            template <dim DimId, typename InnerScale>
             struct scaled_native_unit_abbrev;
 
-            template <native_dim_id DimId>
+            template <dim DimId>
             struct scaled_native_unit_abbrev<DimId, std::ratio<1>> {
                 static constexpr auto value = native_unit_abbrev_v<DimId>;
             };
 
-            template <native_dim_id DimId, typename InnerScale>
+            template <dim DimId, typename InnerScale>
             struct scaled_native_unit_abbrev {
                 /* e.g. unit of '10000 grams' will have abbrev '1000g' in absence
                  *      of a specialization for scaled_native_unit_abbrev
@@ -87,7 +87,7 @@ namespace xo {
                                                                    native_unit_abbrev_helper<DimId>::value.value_);
             };
 
-            template <native_dim_id DimId, typename InnerScale>
+            template <dim DimId, typename InnerScale>
             constexpr auto scaled_native_unit_abbrev_v = scaled_native_unit_abbrev<DimId, InnerScale>::value;
         }
 
@@ -101,7 +101,7 @@ namespace xo {
             native_bpu<universal::time, ratio<1>, ratio<-1,2>> represents unit of 1/sqrt(t)
          **/
         template<
-            native_dim_id DimId,
+            dim DimId,
             typename InnerScale,
             typename Power = std::ratio<1> >
         struct native_bpu : native_unit<DimId, native_unit_for_v<DimId>, InnerScale> {
@@ -109,8 +109,8 @@ namespace xo {
 
             /* native_unit provides
              * - inner_scalefactor_type
-             * - c_native_dim :: native_dim_id
-             * - c_native_unit :: native_unit_id
+             * - c_native_dim :: dim
+             * - c_native_unit :: native_unit
              */
 
             using power_type = Power;
@@ -128,7 +128,7 @@ namespace xo {
          *
          *  Separate template from native_bpu so that abbrev can independently be specialized
          **/
-        template < native_dim_id dim_id,
+        template < dim dim_id,
                    typename InnerScale,
                    typename Power = std::ratio<1> >
         constexpr auto bpu_assemble_abbrev_helper() {
@@ -141,7 +141,7 @@ namespace xo {
         /** Expect:
          *  - BPU is a native_bpu type:
          *    - BPU::inner_scalefactor_type = std::ratio<..>
-         *    - BPU::c_native_dim :: native_dim_id
+         *    - BPU::c_native_dim :: dim
          *    - BPU::power_type = std::ratio<..>
          *    - BPU::c_num :: int
          *    - BPU::c_den :: int
@@ -164,7 +164,7 @@ namespace xo {
          *
          *  with
          *    b = B::inner_scalefactor_type, e.g. 60 for a 1-minute unit
-         *    u = B::native_dim_id, e.g. 1second for time
+         *    u = B::dim, e.g. 1second for time
          *    p = B::power_type
          *
          *  We want to construct something with similar form:
@@ -239,7 +239,7 @@ namespace xo {
 
         // ----- bpu_inner_multiply -----
 
-        /** Suppose we have two native_bpu's that scale the same native_dim_id:
+        /** Suppose we have two native_bpu's that scale the same dim:
          *
          *                            p1
          *    B1 (b1, u, p1)  = (b1.u)

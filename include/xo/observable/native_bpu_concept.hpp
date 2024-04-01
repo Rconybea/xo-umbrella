@@ -28,7 +28,7 @@ namespace xo {
             // NativeBpu::num :: int
             // NativeBpu::den :: int
         }
-            && ((std::is_same_v<decltype(NativeBpu::c_native_dim), const native_dim_id>)
+            && ((std::is_same_v<decltype(NativeBpu::c_native_dim), const dim>)
                 && ratio_concept<typename NativeBpu::inner_scalefactor_type>
                 && ratio_concept<typename NativeBpu::power_type>
                 && (std::is_signed_v<decltype(NativeBpu::c_num)>)

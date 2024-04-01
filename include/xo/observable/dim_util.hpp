@@ -6,7 +6,7 @@
 
 namespace xo {
     namespace obs {
-        enum class native_dim_id {
+        enum class dim {
             /** weight.  native unit = 1 gram **/
             mass,
             /** distance.  native unit = 1 meter **/
@@ -32,25 +32,25 @@ namespace xo {
             price
         };
 
-        template <native_dim_id Dim>
+        template <dim Dim>
         struct native_unit_for;
 
         template <>
-        struct native_unit_for<native_dim_id::mass> { static constexpr auto value = native_unit_id::gram; };
+        struct native_unit_for<dim::mass> { static constexpr auto value = native_unit_id::gram; };
 
         template <>
-        struct native_unit_for<native_dim_id::distance> { static constexpr auto value = native_unit_id::meter; };
+        struct native_unit_for<dim::distance> { static constexpr auto value = native_unit_id::meter; };
 
         template <>
-        struct native_unit_for<native_dim_id::time> { static constexpr auto value = native_unit_id::second; };
+        struct native_unit_for<dim::time> { static constexpr auto value = native_unit_id::second; };
 
         template <>
-        struct native_unit_for<native_dim_id::currency> { static constexpr auto value = native_unit_id::currency; };
+        struct native_unit_for<dim::currency> { static constexpr auto value = native_unit_id::currency; };
 
         template <>
-        struct native_unit_for<native_dim_id::price> { static constexpr auto value = native_unit_id::price; };
+        struct native_unit_for<dim::price> { static constexpr auto value = native_unit_id::price; };
 
-        template <native_dim_id Dim>
+        template <dim Dim>
         constexpr auto native_unit_for_v = native_unit_for<Dim>::value;
     } /*namespace obs*/
 } /*namespace xo*/
