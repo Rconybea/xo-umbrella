@@ -108,8 +108,18 @@ namespace xo {
                 return quantity<unit_type, r_repr_type>::promote(r_scale);
             }
 
+            /**
+             *  divide dimensionless number by this quantity
+             **/
+            template <typename Repr2>
+            auto divide_into(Repr2 x) const {
+                using r_unit_type = unit_invert_t<Unit>;
+                using r_repr_type = std::common_type_t<repr_type, Repr2>;
 
+                r_repr_type r_scale = ((x * r_unit_type::scalefactor_type::num)
+                                       / (this->scale_ * r_unit_type::scalefactor_type::den));
 
+                return quantity<r_unit_type, r_repr_type>::promote(r_scale);
             }
 
             template <typename Unit2, typename Repr2>
