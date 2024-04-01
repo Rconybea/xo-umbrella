@@ -20,8 +20,8 @@ namespace xo {
          *  Select from dimension_impl by known index value
          *
          *  Example:
-         *    using t1 = basic_power_unit<dim::currency, std::ratio<1,1>>;
-         *    using t2 = basic_power_unit<dim::time,     std::ratio<-1,2>>;
+         *    using t1 = native_bpu<dim::currency, std::ratio<1>, std::ratio<1,1>>;
+         *    using t2 = native_bpu<dim::time,     std::ratio<60>, std::ratio<-1,2>>;
          *    using dim = dimension_impl<t1,t2>
          *
          * then
@@ -38,8 +38,60 @@ namespace xo {
             using power_unit_type = Dim::front_type;
         };
 
+        // ----- di_find_bpu -----
+
+        /**
+         *  @brief Select from dimension_impl by native_dim_id
+         *
+         *  Example:
+         *    using t1 = native_bpu<dim::time,     std::ratio<60>, std::ratio<-2>>;
+         *    using t2 = native_bpu<dim::currency, std::ratio<1>, std::ratio<1>>;
+         *    using di = dimension_impl<t1,t2>;
+         *
+         * then
+         *    di_find_bpu<dim::time> -> t1
+         *    di_find_bpu<dim::currency> -> t2
+         *    di_find_bpu<dim::mass> -> native_bpu {dim::mass, std::ratio<1>, std::ratio<0>}
+         **/
+        template <typename BpuList, native_dim_id BasisDim>
+        struct di_find_bpu;
+
+        /**
+         *  @brief Aux template helper for di_find_bpu<..>
+         **/
+        template <typename Front, typename Rest, native_dim_id BasisDim, bool MatchesFront = (Front::c_native_dim == BasisDim)>
+        struct di_find_bpu_aux;
+
+        /** specialization for non-empty BpuList **/
+        template <typename BpuList, native_dim_id BasisDim>
+        struct di_find_bpu {
+            using type = di_find_bpu_aux<typename BpuList::front_type, typename BpuList::rest_type, BasisDim>::type;
+        };
+
+        /** specialization for empty BpuList **/
+        template <native_dim_id BasisDim>
+        struct di_find_bpu<void, BasisDim> {
+            using type = native_bpu<BasisDim, std::ratio<1>, std::ratio<0>>;
+        };
+
+        template <typename Front, typename Rest, native_dim_id BasisDim>
+        struct di_find_bpu_aux<Front, Rest, BasisDim, /*MatchesFront*/ true> {
+            using type = Front;
+        };
+
+        template <typename Front, typename Rest, native_dim_id BasisDim>
+        struct di_find_bpu_aux<Front, Rest, BasisDim, /*MatchesFront*/ false> {
+            using type = di_find_bpu<Rest, BasisDim>::type;
+        };
+
         // ----------------------------------------------------------------
 
+        /**
+         *  Promise:
+         *  - bpu_list::front_type
+         *  - bpu_list::rest_type
+         *  - bpu_node_concept<bpulist<P,D>>
+         **/
         template <typename P, typename D = void>
         struct bpu_list;
 
