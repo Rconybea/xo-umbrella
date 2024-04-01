@@ -41,6 +41,20 @@ namespace xo {
         template <typename Unit>
         constexpr auto dimensionless_v = std::same_as<typename Unit::dim_type, void>;
 
+        // ----- unit_find_bpu -----
+
+        /** @brief find basis-power-unit matching native_dim_id
+         *
+         *  Constructs dimensionless native_bpu if no match
+         **/
+        template <typename U, native_dim_id BasisDim>
+        struct unit_find_bpu {
+            using type = di_find_bpu<typename U::dim_type, BasisDim>::type;
+        };
+
+        template <typename U, native_dim_id BasisDim>
+        using unit_find_bpu_t = unit_find_bpu<U, BasisDim>::type;
+
         // ----- unit_abbrev_v -----
 
         /** @brief canonical stringliteral abbreviation for dimension D. **/
