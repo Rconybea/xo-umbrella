@@ -4,6 +4,8 @@
 
 #include "quantity_concept.hpp"
 #include "unit.hpp"
+//#include "xo/reflect/Reflect.hpp"
+//#include "xo/indentlog/scope.hpp"
 
 namespace xo {
     namespace obs {
@@ -77,6 +79,11 @@ namespace xo {
 
             template <typename Quantity2>
             auto multiply(Quantity2 y) const {
+                //constexpr bool c_debug_flag = false;
+                //using Reflect = xo::reflect::Reflect;
+
+                //scope log(XO_DEBUG(c_debug_flag));
+
                 static_assert(quantity_concept<Quantity2>);
 
                 /* unit: may have non-unit scalefactor_type */
