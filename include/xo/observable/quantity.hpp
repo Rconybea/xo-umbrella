@@ -64,7 +64,7 @@ namespace xo {
 
             template <typename Quantity2>
             auto multiply(Quantity2 y) const {
-                // static_assert(quantity_concept<Quantity2>);
+                static_assert(quantity_concept<Quantity2>);
 
                 /* unit: may have non-unit scalefactor_type */
                 using unit_type = unit_cartesian_product_t<Unit, typename Quantity2::unit_type>;
@@ -256,8 +256,8 @@ namespace xo {
 
         template <typename Quantity1, typename Quantity2>
         inline auto operator* (Quantity1 x, Quantity2 y) {
-            //static_assert(quantity_concept<Quantity1>);
-            //static_assert(quantity_concept<Quantity2>);
+            static_assert(quantity_concept<Quantity1>);
+            static_assert(quantity_concept<Quantity2>);
 
             return x.multiply(y);
         }
