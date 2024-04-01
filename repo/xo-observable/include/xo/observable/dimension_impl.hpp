@@ -290,7 +290,7 @@ namespace xo {
             /* _mult_type may have zero exponent (power_type);
              *  in that case bpu_smart_cons will collapse to DI_Rest
              */
-            using _front_mult_type = bpu_inner_multiply<B, DI_Front>;
+            using _front_mult_type = bpu_product<B, DI_Front>;
 
             using _front_type = typename _front_mult_type::native_bpu_type;
             using _rest_type = DI_Rest;
