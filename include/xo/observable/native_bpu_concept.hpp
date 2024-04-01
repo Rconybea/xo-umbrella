@@ -20,7 +20,7 @@ namespace xo {
         template <typename NativeBpu>
         concept native_bpu_concept = requires(NativeBpu bpu)
         {
-            typename NativeBpu::inner_scalefactor_type;
+            typename NativeBpu::scalefactor_type;
             typename NativeBpu::power_type;
 
             // NativeBpu::c_native_dim :: native_dim_id
@@ -29,7 +29,7 @@ namespace xo {
             // NativeBpu::den :: int
         }
             && ((std::is_same_v<decltype(NativeBpu::c_native_dim), const dim>)
-                && ratio_concept<typename NativeBpu::inner_scalefactor_type>
+                && ratio_concept<typename NativeBpu::scalefactor_type>
                 && ratio_concept<typename NativeBpu::power_type>
                 && (std::is_signed_v<decltype(NativeBpu::c_num)>)
                 && (std::is_signed_v<decltype(NativeBpu::c_den)>))

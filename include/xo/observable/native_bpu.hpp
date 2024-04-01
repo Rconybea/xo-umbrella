@@ -25,7 +25,7 @@ namespace xo {
             static_assert(ratio_concept<Power>);
 
             /* native_unit provides
-             * - inner_scalefactor_type
+             * - scalefactor_type --> std::ratio
              * - c_native_dim :: dim
              * - c_native_unit :: native_unit
              */
@@ -57,7 +57,7 @@ namespace xo {
 
         /** Expect:
          *  - BPU is a native_bpu type:
-         *    - BPU::inner_scalefactor_type = std::ratio<..>
+         *    - BPU::scalefactor_type = std::ratio<..>
          *    - BPU::c_native_dim :: dim
          *    - BPU::power_type = std::ratio<..>
          *    - BPU::c_num :: int
@@ -68,7 +68,7 @@ namespace xo {
             static_assert(native_bpu_concept<BPU>);
 
             return bpu_assemble_abbrev_helper< BPU::c_native_dim,
-                                               typename BPU::inner_scalefactor_type,
+                                               typename BPU::scalefactor_type,
                                                typename BPU::power_type >();
         };
 
@@ -80,7 +80,7 @@ namespace xo {
          *     (b.u)
          *
          *  with
-         *    b = B::inner_scalefactor_type, e.g. 60 for a 1-minute unit
+         *    b = B::scalefactor_type, e.g. 60 for a 1-minute unit
          *    u = B::dim, e.g. 1second for time
          *    p = B::power_type
          *
@@ -123,7 +123,7 @@ namespace xo {
 
             /* b/b' */
             using _t1_type = std::ratio_divide
-                < typename B::inner_scalefactor_type, NewInnerScale >;
+                < typename B::scalefactor_type, NewInnerScale >;
 
             /** require p must be integral **/
             static_assert(B::power_type::den == 1);
@@ -149,7 +149,7 @@ namespace xo {
         struct bpu_invert {
             using type = bpu <
                 B::c_native_dim,
-                typename B::inner_scalefactor_type,
+                typename B::scalefactor_type,
                 std::ratio_multiply<std::ratio<-1>, typename B::power_type>
                 >;
         };
@@ -195,7 +195,7 @@ namespace xo {
 
             /* a'.B2' = a'.(b1.u)^p2 */
             using _b2p_rescaled_type = bpu_rescale<B2,
-                                                   typename B1::inner_scalefactor_type>;
+                                                   typename B1::scalefactor_type>;
             /* (b1.u)^p2 */
             using _b2p_sf_bpu_type = _b2p_rescaled_type::native_bpu_type;
 
@@ -211,7 +211,7 @@ namespace xo {
             /* (b1.u)^(p1+p2) */
             using native_bpu_type = bpu <
                 B1::c_native_dim,
-                typename B1::inner_scalefactor_type,
+                typename B1::scalefactor_type,
                 _p_type /*Power*/ >;
         };
 

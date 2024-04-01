@@ -190,7 +190,7 @@ namespace xo {
              *
              *  - bpu_assemble_abbrev<native_bpu>()              [native_bpu.hpp]
              *  - bpu_assemble_abbrev_helper< native_bpu::c_native_dim,
-             *                                native_bpu::inner_scalefactor_type,
+             *                                native_bpu::scalefactor_type,
              *                                native_bpu::power_type >
              *     -> stringliteral
              *
