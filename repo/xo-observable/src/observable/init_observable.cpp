@@ -1,7 +1,7 @@
 /* @file init_observable.cpp */
 
 #include "init_observable.hpp"
-#include "unit.hpp"
+#include "xo/unit/unit.hpp"
 #include "ExplicitOrderedSet.hpp"
 #include "xo/reflect/init_reflect.hpp"
 //#include "xo/printjson/PrintJson.hpp"

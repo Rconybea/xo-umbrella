@@ -1,4 +1,4 @@
-# xo-observable/docs/CMakeLists.txt
+# xo-umbrella/docs/CMakeLists.txt
 
 set(DOX_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
@@ -14,7 +14,10 @@ set(DOX_INDEX_FILE ${DOX_OUTPUT_DIR}/html/index.html)
 ## sphinx .rst files reachable from cmake-examples/docs
 #file(GLOB_RECURSE SPHINX_RST_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.rst)
 
-set(ALL_LIBRARY_TARGETS xo_observable)  # todo: automate this from xo-cmake macros
+# TODO: subsystems will add themselves to ALL_LIBRARY_TARGETS
+#
+set(ALL_LIBRARY_TARGETS
+    xo_observable xo_unit)
 #set(ALL_UTEST_TARGETS "")              # todo: automate this from xo-cmake macros
 
 # look for doxygen executable

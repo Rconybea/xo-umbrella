@@ -1,4 +1,6 @@
-# xo-observable/docs/CMakeLists.txt
+# xo-unit/docs/CMakeLists.txt
+
+# copied from xo-observable/docs/CMakeLists.txt
 
 set(DOX_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
@@ -14,18 +16,23 @@ set(DOX_INDEX_FILE ${DOX_OUTPUT_DIR}/html/index.html)
 ## sphinx .rst files reachable from cmake-examples/docs
 #file(GLOB_RECURSE SPHINX_RST_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.rst)
 
-set(ALL_LIBRARY_TARGETS xo_observable)  # todo: automate this from xo-cmake macros
-#set(ALL_UTEST_TARGETS "")              # todo: automate this from xo-cmake macros
+set(ALL_LIBRARY_TARGETS xo_unit)  # todo: automate this from xo-cmake macros
+#set(ALL_UTEST_TARGETS "")        # todo: automate this from xo-cmake macros
 
 # look for doxygen executable
 find_program(DOXYGEN_EXECUTABLE NAMES doxygen REQUIRED)
 message("-- DOXYGEN_EXECUTABLE=${DOXYGEN_EXECUTABLE}")
 
 if (XO_SUBMODULE_BUILD)
+    # in submodule build, rely on toplevel docs/CMakeLists.txt file instead
 else()
-    # build docs starting from xo-observable only in standalone build.
+    # build docs starting from here only in standalone build.
     # otherwise use top-level doxygen setup instead.
 
+    # TODO:
+    # 1. move Doxyfile.in to xo-cmake project
+    # 2. replace this command section with xo-cmake macro
+    #
     configure_file(
         Doxyfile.in ${DOX_CONFIG_FILE}
         FILE_PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE

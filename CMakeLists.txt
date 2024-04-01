@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(xo-submodule2 VERSION 1.0)
+project(xo-umbrella VERSION 1.0)
 
 # ----------------------------------------------------------------
 # global build settings
@@ -71,6 +71,9 @@ message("-- CMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}")
 # ----------------------------------------------------------------
 # xo satellite projects
 #
+# reminder: must appear in topologically-sorted dependency order,
+#           dependency providers before dependency consumers
+#
 add_subdirectory(repo/xo-cmake)
 add_subdirectory(repo/xo-indentlog)
 add_subdirectory(repo/xo-subsys)
@@ -98,6 +101,7 @@ add_subdirectory(repo/xo-pykalmanfilter)
 add_subdirectory(repo/xo-distribution)
 add_subdirectory(repo/xo-pydistribution)
 add_subdirectory(repo/xo-optionutil)
+add_subdirectory(repo/xo-unit)
 add_subdirectory(repo/xo-observable)
 
 # ----------------------------------------------------------------
