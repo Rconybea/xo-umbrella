@@ -47,7 +47,7 @@ namespace xo {
 
         template <typename Front,
                   typename Rest>
-        constexpr bool FrontHasZeroPower = std::ratio_equal_v< typename Front::power_type, std::ratio<0,1> >;
+        constexpr bool FrontHasZeroPower = (Front::power_type::num == 0); //std::ratio_equal_v< typename Front::power_type, std::ratio<0,1> >;
 
         template <typename Front,
                   typename Rest,
