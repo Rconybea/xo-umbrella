@@ -168,6 +168,17 @@ namespace xo {
              *                               native_bpu::power_type >
              */
 
+            // ----- weight -----
+
+            using milligram  = wrap_unit< std::ratio<1>,
+                                          bpu_list< native_bpu<native_dim_id::mass,
+                                                               std::ratio<1, 1000>> > >;
+
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::mass, std::ratio<1, 1000>> {
+                static constexpr auto value = stringliteral("mg");
+            };
+
             using gram       = wrap_unit< std::ratio<1>,
                                           bpu_list< native_bpu<native_dim_id::mass,
                                                                std::ratio<1>> > >;
