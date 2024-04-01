@@ -30,3 +30,4 @@ git subtree push --prefix repo/xo-pydistribution git@github.com:rconybea/xo-pydi
 
 git subtree push --prefix repo/xo-optionutil git@github.com:rconybea/xo-optionutil.git main
 git subtree push --prefix repo/xo-observable git@github.com:rconybea/xo-observable.git main
+git subtree push --prefix repo/xo-unit git@github.com:rconybea/xo-unit.git main
