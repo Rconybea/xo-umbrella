@@ -75,7 +75,7 @@ namespace xo {
         /** specialization for empty BpuList **/
         template <dim BasisDim>
         struct di_find_bpu<void, BasisDim> {
-            using type = native_bpu<BasisDim, std::ratio<1>, std::ratio<0>>;
+            using type = bpu<BasisDim, std::ratio<1>, std::ratio<0>>;
         };
 
         template <typename Front, typename Rest, dim BasisDim>
