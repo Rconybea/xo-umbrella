@@ -9,6 +9,8 @@ namespace xo {
         enum class native_dim_id {
             /** weight.  native unit = 1 gram **/
             mass,
+            /** distance.  native unit = 1 meter **/
+            distance,
             /** time. native unit = 1 second **/
             time,
             /** a currency amount. native unit depends on actual currency.
@@ -24,6 +26,7 @@ namespace xo {
 
         enum class native_unit_id {
             gram,
+            meter,
             second,
             currency,
             price
@@ -34,6 +37,9 @@ namespace xo {
 
         template <>
         struct native_unit_for<native_dim_id::mass> { static constexpr auto value = native_unit_id::gram; };
+
+        template <>
+        struct native_unit_for<native_dim_id::distance> { static constexpr auto value = native_unit_id::meter; };
 
         template <>
         struct native_unit_for<native_dim_id::time> { static constexpr auto value = native_unit_id::second; };

@@ -39,6 +39,11 @@ namespace xo {
         };
 
         template <>
+        struct native_unit_abbrev_helper<native_dim_id::distance> {
+            static constexpr auto value = stringliteral("m");
+        };
+
+        template <>
         struct native_unit_abbrev_helper<native_dim_id::time> {
             static constexpr auto value = stringliteral("s");
         };

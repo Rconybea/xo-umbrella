@@ -180,6 +180,28 @@ namespace xo {
                 static constexpr auto value = stringliteral("kg");
             };
 
+            // ----- distance -----
+
+            using millimeter = wrap_unit< std::ratio<1>,
+                                          bpu_list< native_bpu<native_dim_id::distance,
+                                                               std::ratio<1,1000>> > >;
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::distance, std::ratio<1,1000>> {
+                static constexpr auto value = stringliteral("mm");
+            };
+
+            using meter      = wrap_unit< std::ratio<1>,
+                                          bpu_list< native_bpu<native_dim_id::time,
+                                                               std::ratio<1>> > >;
+
+            using kilometer  = wrap_unit< std::ratio<1>,
+                                          bpu_list< native_bpu<native_dim_id::time,
+                                                               std::ratio<1000>> > >;
+            template <>
+            struct scaled_native_unit_abbrev<native_dim_id::distance, std::ratio<1000>> {
+                static constexpr auto value = stringliteral("km");
+            };
+
             using millisecond = wrap_unit< std::ratio<1>, bpu_list< native_bpu<native_dim_id::time,
                                                                                std::ratio<1,1000>> > >;
 
