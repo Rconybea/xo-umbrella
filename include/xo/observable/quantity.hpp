@@ -195,6 +195,18 @@ namespace xo {
                 return quantity<units::kilogram, Repr>::promote(x);
             };
 
+            // ----- time -----
+
+            template <typename Repr = double>
+            inline auto nanoseconds(Repr x) -> quantity<units::nanosecond, Repr> {
+                return quantity<units::nanosecond, Repr>::promote(x);
+            }
+
+            template <typename Repr = double>
+            inline auto microseconds(Repr x) -> quantity<units::microsecond, Repr> {
+                return quantity<units::microsecond, Repr>::promote(x);
+            }
+
             template <typename Repr = double>
             inline auto milliseconds(Repr x) -> quantity<units::millisecond, Repr> {
                 return quantity<units::millisecond, Repr>::promote(x);
@@ -208,6 +220,16 @@ namespace xo {
             template <typename Repr = double>
             inline auto minutes(Repr x) -> quantity<units::minute, Repr> {
                 return quantity<units::minute, Repr>::promote(x);
+            }
+
+            template <typename Repr = double>
+            inline auto hours(Repr x) -> quantity<units::hour, Repr> {
+                return quantity<units::hour, Repr>::promote(x);
+            }
+
+            template <typename Repr = double>
+            inline auto days(Repr x) -> quantity<units::day, Repr> {
+                return quantity<units::day, Repr>::promote(x);
             }
         }
     } /*namespace obs*/
