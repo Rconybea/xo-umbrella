@@ -465,7 +465,29 @@ namespace xo {
             inline auto days(Repr x) -> quantity<units::day, Repr> {
                 return quantity<units::day, Repr>::promote(x);
             }
-        }
+
+            // ----- time/volatility -----
+
+            /** quantity in units of 1/sqrt(1dy) **/
+            template <typename Repr = double>
+            inline auto volatility1d(Repr x) -> quantity<units::volatility_1d, Repr> {
+                return quantity<units::volatility_1d, Repr>::promote(x);
+            }
+
+            /** quantity in units of 1/sqrt(30days)
+             **/
+            template <typename Repr = double>
+            inline auto volatility30d(Repr x) -> quantity<units::volatility_30d, Repr> {
+                return quantity<units::volatility_30d, Repr>::promote(x);
+            }
+
+            /** quantity in units of 1/sqrt(250days)
+             **/
+            template <typename Repr = double>
+            inline auto volatility250d(Repr x) -> quantity<units::volatility_250d, Repr> {
+                return quantity<units::volatility_250d, Repr>::promote(x);
+            }
+        } /*namespace qty*/
     } /*namespace obs*/
 } /*namespace xo*/
 
