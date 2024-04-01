@@ -31,3 +31,4 @@ git subtree add --prefix repo/xo-pydistribution https://github.com/rconybea/xo-p
 # private repos.  These need to use [git@github.com:] instead of [https://github.com/] for prefix
 git subtree add --prefix repo/xo-optionutil git@github.com:rconybea/xo-optionutil.git main
 git subtree add --prefix repo/xo-observable git@github.com:rconybea/xo-observable.git main
+git subtree add --prefix repo/xo-add git@github.com:rconybea/xo-unit.git main
