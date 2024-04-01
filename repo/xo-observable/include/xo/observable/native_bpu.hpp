@@ -25,7 +25,7 @@ namespace xo {
             dim DimId,
             typename InnerScale,
             typename Power = std::ratio<1> >
-        struct native_bpu : basis_unit<DimId, native_unit_for_v<DimId>, InnerScale> {
+        struct bpu : basis_unit<DimId, native_unit_for_v<DimId>, InnerScale> {
             static_assert(ratio_concept<Power>);
 
             /* native_unit provides
@@ -141,7 +141,7 @@ namespace xo {
              *          p
              *    (b'.u)
              **/
-            using native_bpu_type = native_bpu < B::c_native_dim,
+            using native_bpu_type = bpu < B::c_native_dim,
                                                  NewInnerScale,
                                                  typename B::power_type >;
         };
@@ -151,7 +151,7 @@ namespace xo {
         /** invert a native bpu:  create type for space 1/B **/
         template <typename B>
         struct bpu_invert {
-            using type = native_bpu <
+            using type = bpu <
                 B::c_native_dim,
                 typename B::inner_scalefactor_type,
                 std::ratio_multiply<std::ratio<-1>, typename B::power_type>
@@ -215,7 +215,7 @@ namespace xo {
             using outer_scalefactor_type = _b2p_rescaled_type::outer_scalefactor_type;
 
             /* (b1.u)^(p1+p2) */
-            using native_bpu_type = native_bpu <
+            using native_bpu_type = bpu <
                 B1::c_native_dim,
                 typename B1::inner_scalefactor_type,
                 _p_type /*Power*/ >;

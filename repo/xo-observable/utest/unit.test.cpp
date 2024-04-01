@@ -180,13 +180,13 @@ namespace xo {
             scope log(XO_DEBUG2(c_debug_flag, "TEST_CASE.dimension"));
             //log && log("(A)", xtag("foo", foo));
 
-            using t1 = obs::native_bpu<obs::dim::currency, std::ratio<1,1>>;
+            using t1 = obs::bpu<obs::dim::currency, std::ratio<1,1>>;
 
             static_assert(t1::c_native_dim == obs::dim::currency);
             static_assert(t1::power_type::num == 1);
             static_assert(t1::power_type::den == 1);
 
-            using t2 = obs::native_bpu<obs::dim::time, std::ratio<1>, std::ratio<-1,2>>;
+            using t2 = obs::bpu<obs::dim::time, std::ratio<1>, std::ratio<-1,2>>;
 
             static_assert(t2::c_native_dim == obs::dim::time);
             static_assert(t2::power_type::num == -1);
