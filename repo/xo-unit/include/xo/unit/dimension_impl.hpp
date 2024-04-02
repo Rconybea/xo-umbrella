@@ -6,7 +6,6 @@
 #include "native_bpu.hpp"
 #include "dim_util.hpp"
 #include "ratio_util.hpp"
-#include <json/value.h>
 #include <ratio>
 #include <algorithm>
 #include <numeric>
